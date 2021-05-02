@@ -6,12 +6,13 @@ export const environment = {
   production: false,
   useEmulators: true,
   firebase: {
-      apiKey: "AIzaSyB9LOREMGhj1jpVXOHTKIwQu2oM7pVfjQg",
-      authDomain: "fir-course-recording-c7f3e.firebaseapp.com",
-      projectId: "fir-course-recording-c7f3e",
-      storageBucket: "fir-course-recording-c7f3e.appspot.com",
-      messagingSenderId: "927953565493",
-      appId: "1:927953565493:web:0d4a8e79cc45fd38733e7c"
+    apiKey: "AIzaSyCq1t1X34DzlVKBeQKjZvKY6Uh0Le1nhi4",
+    authDomain: "emulator-123.firebaseapp.com",
+    projectId: "emulator-123",
+    storageBucket: "emulator-123.appspot.com",
+    messagingSenderId: "451254566218",
+    appId: "1:451254566218:web:2eaddf355689fed92715b3",
+    measurementId: "G-2JE0ZHCKY2"
   },
   api: {
 

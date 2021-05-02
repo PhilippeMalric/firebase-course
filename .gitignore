@@ -1,6 +1,5 @@
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
-src/environments/
 
 # compiled output
 /dist
@@ -48,3 +47,8 @@ firestore-debug.log
 ui-debug.log
 /try-emulator/node_modules
 /functions/service-accounts/*.json
+
+
+
+/src/environments/environment.prod.ts
+/src/environments/environment.ts
