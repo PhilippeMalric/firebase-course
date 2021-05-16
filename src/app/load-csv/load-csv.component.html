@@ -26,5 +26,9 @@ id="txtFileUpload"
     </mat-form-field>
   </form>
 
+  <button mat-raised-button (click)='createStream()'>Stream</button>
+  <button mat-raised-button color="warn" (click)='stopStream()'>Stop</button>
+
+  
   <var-test [varName]="myControl.value"> </var-test>
   

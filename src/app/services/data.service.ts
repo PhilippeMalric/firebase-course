@@ -1,7 +1,7 @@
 
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { from, Observable } from 'rxjs';
+import { BehaviorSubject, from, Observable } from 'rxjs';
 import { concatMap, map } from 'rxjs/operators';
 import { Variable } from '../model/variable';
 import { convertSnaps } from './db-utils';
@@ -11,7 +11,11 @@ import { convertSnaps } from './db-utils';
 })
 export class DataService {
 
-  constructor(private db: AngularFirestore) { }
+mainVar$ : BehaviorSubject<String>
+
+  constructor(private db: AngularFirestore) { 
+      this.mainVar$ = new BehaviorSubject<String>("**premier**")
+  }
   findVariableByNom(nom: string): Observable<Variable | null> {
     return this.db.collection("variables",
         ref => ref.where("nom", "==", nom))

@@ -3,7 +3,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { NgxCsvParser, NgxCSVParserError } from 'ngx-csv-parser';
 import { Observable } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
+import { map, startWith, timeInterval } from 'rxjs/operators';
 import { DataService } from '../services/data.service';
 
 @Component({
@@ -18,6 +18,8 @@ export class LoadCSVComponent implements OnInit {
 
   csvRecords: any[] = [];
   header = false;
+  currentIndex: number;
+  interval:any
 
   constructor(private ngxCsvParser: NgxCsvParser,private dataService:DataService) {
   }
@@ -66,6 +68,48 @@ export class LoadCSVComponent implements OnInit {
     console.log(this.myControl.value)
   }
 
+  stopStream = ()=>{
+    if(this.interval){
+      clearInterval(this.interval)
+    }
+  }
+
+  createStream = ()=>{
+    if(this.interval){
+      clearInterval(this.interval)
+    }
+   
+    if(this.csvRecords){
+      let varNames:String[] = this.csvRecords[0]
+      if(varNames.includes(this.myControl.value)){
+        let n = varNames.indexOf(this.myControl.value)
+        let col = this.csvRecords.map(x=>x[n])
+
+        let sArray = this.shuffle(col)
+        this.currentIndex = 0
+        this.interval = setInterval(()=>{
+        if(this.currentIndex < sArray.length){
+          this.dataService.mainVar$.next(sArray[this.currentIndex])
+          this.currentIndex++
+        }else{
+          clearInterval(this.interval)
+        }
+          
+
+        },100)
+        this.dataService.mainVar$.next
+      }
+      else{
+
+      }
+ 
+    }
+    else{
+
+    }
+    
+  }
+
   uploadVar(){
 
     let newD =[]
@@ -86,6 +130,24 @@ export class LoadCSVComponent implements OnInit {
     this.dataService.createVar(newVar).subscribe()
   }
 
+   shuffle = (array):any[]=>{
+    var currentIndex = array.length, temporaryValue, randomIndex;
+  
+    // While there remain elements to shuffle...
+    while (0 !== currentIndex) {
+  
+      // Pick a remaining element...
+      randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex -= 1;
+  
+      // And swap it with the current element.
+      temporaryValue = array[currentIndex];
+      array[currentIndex] = array[randomIndex];
+      array[randomIndex] = temporaryValue;
+    }
+  
+    return array;
+  }
   
 }
 
