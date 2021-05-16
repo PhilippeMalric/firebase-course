@@ -1,0 +1,30 @@
+<input 
+type="file" #csvReader 
+name="Upload CSV" 
+id="txtFileUpload" 
+(change)="uploadListener($event)" accept=".csv" 
+/> 
+
+<button mat-raised-button (click)='uploadVar()'>add</button>
+<button mat-raised-button (click)='printValue()'>value</button>
+
+
+<form class="form">
+    <mat-form-field class="example-full-width">
+      <mat-label>Var Name</mat-label>
+      <input type="text"
+             placeholder="Pick one"
+             aria-label="Number"
+             matInput
+             [formControl]="myControl"
+             [matAutocomplete]="auto">
+      <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+        <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+          {{option}}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+  </form>
+
+  <var-test [varName]="myControl.value"> </var-test>
+  

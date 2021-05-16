@@ -25,6 +25,7 @@ import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatSelectModule} from '@angular/material/select';
 import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {ReactiveFormsModule} from '@angular/forms';
 import {HomeComponent} from './home/home.component';
 import {AboutComponent} from './about/about.component';
@@ -38,6 +39,10 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import {CreateUserComponent} from './create-user/create-user.component';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {MatNativeDateModule} from '@angular/material/core';
+import { LoadCSVComponent } from './load-csv/load-csv.component';
+import { NgxCsvParserModule } from 'ngx-csv-parser';
+import { VarViewComponent } from './var-view/var-view.component';
+import { VarTestComponent } from './var-test/var-test.component';
 
 @NgModule({
   declarations: [
@@ -49,9 +54,13 @@ import {MatNativeDateModule} from '@angular/material/core';
     EditCourseDialogComponent,
     LoginComponent,
     CreateCourseComponent,
-    CreateUserComponent
+    CreateUserComponent,
+    LoadCSVComponent,
+    VarViewComponent,
+    VarTestComponent
   ],
   imports: [
+    NgxCsvParserModule,
     BrowserModule,
     BrowserAnimationsModule,
     MatMenuModule,
@@ -73,6 +82,7 @@ import {MatNativeDateModule} from '@angular/material/core';
     MatSelectModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    MatAutocompleteModule,
     ReactiveFormsModule,
     AppRoutingModule,
     HttpClientModule,

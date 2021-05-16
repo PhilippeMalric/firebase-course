@@ -8,6 +8,8 @@ import {CreateCourseComponent} from './create-course/create-course.component';
 import {AngularFireAuthGuard, hasCustomClaim, redirectUnauthorizedTo} from '@angular/fire/auth-guard';
 import {CreateUserComponent} from './create-user/create-user.component';
 import {CourseResolver} from "./services/course.resolver";
+import { LoadCSVComponent } from './load-csv/load-csv.component';
+import { VarViewComponent } from './var-view/var-view.component';
 
 const routes: Routes = [
   {
@@ -17,6 +19,16 @@ const routes: Routes = [
   {
     path: 'create-course',
     component: CreateCourseComponent
+
+  },
+  {
+    path: 'varview',
+    component: VarViewComponent
+
+  },
+  {
+    path: 'readcsv',
+    component: LoadCSVComponent
 
   },
   {
