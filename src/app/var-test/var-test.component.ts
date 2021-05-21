@@ -1,4 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { Statistique } from '../model/statistique';
+import { State } from '../reducers/main.reducer';
 import { DataService } from '../services/data.service';
 
 @Component({
@@ -8,16 +11,33 @@ import { DataService } from '../services/data.service';
 })
 export class VarTestComponent implements OnInit {
 
-  @Input() varName: String;
+  _varName: String;
+  get varName(): String {
+    return this._varName;
+}
+  @Input() set varName(value: String) {
+    this._varName = value;
+    this.clearData();
+  }
+  
   dixPremiers: String[] = [];
+  
+  categoriesD: {};
 
-  constructor(private dataService:DataService) { }
+  constructor(private store:Store,private dataService:DataService) { 
+    
+    this.categoriesD = {}
+  }
 
   ngOnInit(): void {
-    this.dataService.mainVar$.subscribe((data)=>{
+    this.store.subscribe((state:any)=>{
       //console.log("data")
-      //console.log(data)
+      console.log(state)
+
+      let data = state.main.data
+     
       if(data != "**premier**"){
+        this.modifieCategories(data)
 
         this.dixPremiers.unshift(data)
         if(this.dixPremiers.length > 10){
@@ -26,6 +46,27 @@ export class VarTestComponent implements OnInit {
 
       }
     })
+  }
+
+  clearData() {
+
+    this.categoriesD = {}
+
+  }
+
+  modifieCategories(data: String) {
+    
+    if( Object.keys(this.categoriesD).includes(""+data) ){
+      this.categoriesD[""+data] = this.categoriesD[""+data] +1
+    }else{
+      this.categoriesD[""+data] = 1
+    }
+
+    let categories = Object.keys(this.categoriesD).map((cat)=>{
+      return {categorie:cat,count:this.categoriesD[""+cat]}
+    })
+    this.dataService.categories$.next(categories)
+
   }
 
 }

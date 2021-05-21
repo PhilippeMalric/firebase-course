@@ -43,6 +43,12 @@ import { LoadCSVComponent } from './load-csv/load-csv.component';
 import { NgxCsvParserModule } from 'ngx-csv-parser';
 import { VarViewComponent } from './var-view/var-view.component';
 import { VarTestComponent } from './var-test/var-test.component';
+import { Svg1Component } from './svg1/svg1.component';
+import { StoreModule } from '@ngrx/store';
+import { reducers, metaReducers } from './reducers';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { reducer } from './reducers/main.reducer';
+
 
 @NgModule({
   declarations: [
@@ -57,7 +63,8 @@ import { VarTestComponent } from './var-test/var-test.component';
     CreateUserComponent,
     LoadCSVComponent,
     VarViewComponent,
-    VarTestComponent
+    VarTestComponent,
+    Svg1Component
   ],
   imports: [
     NgxCsvParserModule,
@@ -90,7 +97,9 @@ import { VarTestComponent } from './var-test/var-test.component';
     AngularFirestoreModule,
     AngularFireStorageModule,
     AngularFireAuthModule,
-    AngularFireFunctionsModule
+    AngularFireFunctionsModule,
+    StoreModule.forRoot({ main: reducer }),
+    !environment.production ? StoreDevtoolsModule.instrument() : []
   ],
   providers: [
       { provide: USE_AUTH_EMULATOR, useValue: environment.useEmulators ? ['localhost', 9099] : undefined },

@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { BehaviorSubject, from, Observable } from 'rxjs';
 import { concatMap, map } from 'rxjs/operators';
+import { Statistique } from '../model/statistique';
 import { Variable } from '../model/variable';
 import { convertSnaps } from './db-utils';
 
@@ -12,9 +13,10 @@ import { convertSnaps } from './db-utils';
 export class DataService {
 
 mainVar$ : BehaviorSubject<String>
-
+categories$: BehaviorSubject<Statistique[]>;
   constructor(private db: AngularFirestore) { 
       this.mainVar$ = new BehaviorSubject<String>("**premier**")
+      this.categories$ = new BehaviorSubject<Statistique[]>([])
   }
   findVariableByNom(nom: string): Observable<Variable | null> {
     return this.db.collection("variables",

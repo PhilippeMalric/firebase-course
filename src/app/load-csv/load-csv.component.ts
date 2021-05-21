@@ -1,9 +1,11 @@
 import { Variable } from '@angular/compiler/src/render3/r3_ast';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { Store } from '@ngrx/store';
 import { NgxCsvParser, NgxCSVParserError } from 'ngx-csv-parser';
 import { Observable } from 'rxjs';
 import { map, startWith, timeInterval } from 'rxjs/operators';
+import { addData } from '../actions/main.actions';
 import { DataService } from '../services/data.service';
 
 @Component({
@@ -21,7 +23,10 @@ export class LoadCSVComponent implements OnInit {
   currentIndex: number;
   interval:any
 
-  constructor(private ngxCsvParser: NgxCsvParser,private dataService:DataService) {
+  constructor(
+    private ngxCsvParser: NgxCsvParser,
+    private dataService:DataService,
+    private store:Store) {
   }
 
   @ViewChild('csvReader', { static: false }) fileImportInput: any;
@@ -89,7 +94,9 @@ export class LoadCSVComponent implements OnInit {
         this.currentIndex = 0
         this.interval = setInterval(()=>{
         if(this.currentIndex < sArray.length){
-          this.dataService.mainVar$.next(sArray[this.currentIndex])
+          console.log(sArray[this.currentIndex])
+          this.store.dispatch(addData({data:sArray[this.currentIndex]}) )
+          //this.dataService.mainVar$.next(sArray[this.currentIndex])
           this.currentIndex++
         }else{
           clearInterval(this.interval)
@@ -97,7 +104,7 @@ export class LoadCSVComponent implements OnInit {
           
 
         },100)
-        this.dataService.mainVar$.next
+        
       }
       else{
 
