@@ -19,6 +19,55 @@ export const addData = createAction(
   props<{ data:any }>()
 );
 
+export const clearSVGon = createAction(
+  '[Data clear] Add clear on',
+  props<{ data:any }>()
+);
+export const clearSVGoff = createAction(
+  '[Data clear] Add clear off',
+  props<{ data:any }>()
+);
+
+export const updateCategories = createAction(
+  '[Data update Cat] update Cat',
+  props<{ data:any }>()
+);
+
+export const updateFileName = createAction(
+  '[Data update FileName] update FileName',
+  props<{ data:any }>()
+);
+
+export const updateFileSize = createAction(
+  '[Data update FileSize] update FileSize',
+  props<{ data:any }>()
+);
+
+export const updateFileMeta = createAction(
+  '[Data update FileMeta] update FileMeta',
+  props<{ data:any }>()
+);
+
+export const updateInterval = createAction(
+  '[Data update Interval] update Interval',
+  props<{ data:any }>()
+);
+
+export const stopInterval = createAction(
+  '[Data stop Interval] update stop',
+  props<{ data:any }>()
+);
+
+export const updateData = createAction(
+  '[Data updateData] updateData',
+  props<{ data:any }>()
+);
+
+export const updateNo_na = createAction(
+  '[Data updateNoNA] update NO NA',
+  props<{ data:any }>()
+);
+
 export const increment = createAction('[Counter Component] Increment');
 export const decrement = createAction('[Counter Component] Decrement');
 export const reset = createAction('[Counter Component] Reset');

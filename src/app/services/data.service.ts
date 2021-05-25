@@ -1,8 +1,10 @@
 
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
+import { Store } from '@ngrx/store';
 import { BehaviorSubject, from, Observable } from 'rxjs';
 import { concatMap, map } from 'rxjs/operators';
+import { updateCategories } from '../actions/main.actions';
 import { Statistique } from '../model/statistique';
 import { Variable } from '../model/variable';
 import { convertSnaps } from './db-utils';
@@ -13,11 +15,46 @@ import { convertSnaps } from './db-utils';
 export class DataService {
 
 mainVar$ : BehaviorSubject<String>
+dataset$ :  BehaviorSubject<any[]>
 categories$: BehaviorSubject<Statistique[]>;
-  constructor(private db: AngularFirestore) { 
+categoriesD: {};
+
+  constructor(private db: AngularFirestore,private store:Store) { 
+
+        this.store.subscribe((state:any)=>{
+            let clear = state.main.clearState
+
+            if(clear){
+                this.categoriesD = {}
+      
+            }
+        })
+
       this.mainVar$ = new BehaviorSubject<String>("**premier**")
       this.categories$ = new BehaviorSubject<Statistique[]>([])
+      this.categoriesD = {}
+      this.dataset$ = new BehaviorSubject<any[]>([])
   }
+
+  modifieCategories(data: String) {
+    
+    if( Object.keys(this.categoriesD).includes(""+data) ){
+      this.categoriesD[""+data] = this.categoriesD[""+data] +1
+    }else{
+      this.categoriesD[""+data] = 1
+    }
+
+    let categories = Object.keys(this.categoriesD).map((cat)=>{
+      return {categorie:cat,count:this.categoriesD[""+cat]}
+    })
+    //this.store.dispatch(updateCategories({data:categories}))
+    //console.log(categories)
+    this.categories$.next(categories)
+    
+  }
+
+
+
   findVariableByNom(nom: string): Observable<Variable | null> {
     return this.db.collection("variables",
         ref => ref.where("nom", "==", nom))

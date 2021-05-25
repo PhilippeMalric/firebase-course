@@ -10,11 +10,12 @@ import {CreateUserComponent} from './create-user/create-user.component';
 import {CourseResolver} from "./services/course.resolver";
 import { LoadCSVComponent } from './load-csv/load-csv.component';
 import { VarViewComponent } from './var-view/var-view.component';
+import { DataDivComponent } from './data-div/data-div.component';
 
 const routes: Routes = [
   {
     path: '',
-    component: HomeComponent
+    component: DataDivComponent
   },
   {
     path: 'create-course',
@@ -26,11 +27,7 @@ const routes: Routes = [
     component: VarViewComponent
 
   },
-  {
-    path: 'readcsv',
-    component: LoadCSVComponent
-
-  },
+  
   {
     path: 'create-user',
     component: CreateUserComponent

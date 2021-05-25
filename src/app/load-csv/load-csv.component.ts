@@ -1,27 +1,29 @@
 import { Variable } from '@angular/compiler/src/render3/r3_ast';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { Store } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 import { NgxCsvParser, NgxCSVParserError } from 'ngx-csv-parser';
 import { Observable } from 'rxjs';
-import { map, startWith, timeInterval } from 'rxjs/operators';
-import { addData } from '../actions/main.actions';
+import { map, startWith, tap, timeInterval } from 'rxjs/operators';
+import { addData, updateData, updateFileMeta, updateFileName, updateFileSize, updateInterval } from '../actions/main.actions';
+import { selectFileName } from '../reducers';
 import { DataService } from '../services/data.service';
 
 @Component({
-  selector: 'app-load-csv',
+  selector: 'load-csv',
   templateUrl: './load-csv.component.html',
   styleUrls: ['./load-csv.component.css']
 })
 export class LoadCSVComponent implements OnInit {
-  myControl = new FormControl();
-  options: string[] = ['One', 'Two', 'Three'];
-  filteredOptions: Observable<string[]>;
+
 
   csvRecords: any[] = [];
   header = false;
   currentIndex: number;
   interval:any
+  fileName:Observable<String>
+  options: any;
+
 
   constructor(
     private ngxCsvParser: NgxCsvParser,
@@ -32,90 +34,47 @@ export class LoadCSVComponent implements OnInit {
   @ViewChild('csvReader', { static: false }) fileImportInput: any;
 
   ngOnInit(){
-    this.filteredOptions = this.myControl.valueChanges.pipe(
-      startWith(''),
-      map(value => this._filter(value))
-    );
+    
+    this.fileName = this.store.pipe(select(selectFileName))
   }
-  private _filter(value: string): string[] {
-    const filterValue = value.toLowerCase();
-
-    return this.options.filter(option => option.toLowerCase().indexOf(filterValue) === 0);
-  }
+  
 
   // Your applications input change listener for the CSV File
   uploadListener($event: any): void {
 
     // Select the files from the event
     const files = $event.srcElement.files;
+    console.log('files', files);
+    if(files.length > 0 ){
+      this.store.dispatch(updateFileName({data:files[0].name}))
+      this.store.dispatch(updateFileSize({data:formatBytes(files[0].size)}))
 
+    }
     // Parse the file you want to select for the operation along with the configuration
     this.ngxCsvParser.parse(files[0], { header: this.header, delimiter: ',' })
       .pipe().subscribe((result: Array<any>) => {
 
-        console.log('Result', result);
+        //console.log('Result', result);
 
         this.options = result[0]
-        this.filteredOptions = this.myControl.valueChanges.pipe(
-          
-          startWith(''),
-          map(value => this._filter(value))
-        );
-        this.csvRecords = result;
+
+        let meta = {
+          nrow:result.length,
+          ncol:this.options.length,
+          varName:this.options
+        }
+        this.store.dispatch(updateFileMeta({data:meta}))
+      
+        this.dataService.dataset$.next(result)
       }, (error: NgxCSVParserError) => {
         console.log('Error', error);
       });
       
   }
 
-  printValue = ()=>{
 
-    console.log(this.myControl.value)
-  }
 
-  stopStream = ()=>{
-    if(this.interval){
-      clearInterval(this.interval)
-    }
-  }
-
-  createStream = ()=>{
-    if(this.interval){
-      clearInterval(this.interval)
-    }
-   
-    if(this.csvRecords){
-      let varNames:String[] = this.csvRecords[0]
-      if(varNames.includes(this.myControl.value)){
-        let n = varNames.indexOf(this.myControl.value)
-        let col = this.csvRecords.map(x=>x[n])
-
-        let sArray = this.shuffle(col)
-        this.currentIndex = 0
-        this.interval = setInterval(()=>{
-        if(this.currentIndex < sArray.length){
-          console.log(sArray[this.currentIndex])
-          this.store.dispatch(addData({data:sArray[this.currentIndex]}) )
-          //this.dataService.mainVar$.next(sArray[this.currentIndex])
-          this.currentIndex++
-        }else{
-          clearInterval(this.interval)
-        }
-          
-
-        },100)
-        
-      }
-      else{
-
-      }
- 
-    }
-    else{
-
-    }
-    
-  }
+  
 
   uploadVar(){
 
@@ -137,28 +96,20 @@ export class LoadCSVComponent implements OnInit {
     this.dataService.createVar(newVar).subscribe()
   }
 
-   shuffle = (array):any[]=>{
-    var currentIndex = array.length, temporaryValue, randomIndex;
-  
-    // While there remain elements to shuffle...
-    while (0 !== currentIndex) {
-  
-      // Pick a remaining element...
-      randomIndex = Math.floor(Math.random() * currentIndex);
-      currentIndex -= 1;
-  
-      // And swap it with the current element.
-      temporaryValue = array[currentIndex];
-      array[currentIndex] = array[randomIndex];
-      array[randomIndex] = temporaryValue;
-    }
-  
-    return array;
-  }
   
 }
 
+function formatBytes(bytes, decimals = 2) {
+  if (bytes === 0) return '0 Bytes';
 
+  const k = 1024;
+  const dm = decimals < 0 ? 0 : decimals;
+  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+}
   
 
 

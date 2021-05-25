@@ -1,6 +1,13 @@
-<h1>{{varName}}</h1>
-<app-svg1></app-svg1>
+
+
 <button mat-raised-button (click)='clearData()'>Clear</button>
+
+<!--
+
+<button mat-raised-button color="warn" (click)='stopStream()'>Stop</button>
+-->
+<app-svg1></app-svg1>
+
 <p *ngFor="let e of dixPremiers">{{e}}</p>
 
 

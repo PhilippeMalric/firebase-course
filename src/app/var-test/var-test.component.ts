@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { Statistique } from '../model/statistique';
-import { State } from '../reducers/main.reducer';
+import { select, Store } from '@ngrx/store';
+import { clearSVGon, stopInterval, updateCategories } from '../actions/main.actions';
+import { selectData, selectFileName } from '../reducers';
 import { DataService } from '../services/data.service';
 
 @Component({
@@ -11,61 +11,62 @@ import { DataService } from '../services/data.service';
 })
 export class VarTestComponent implements OnInit {
 
-  _varName: String;
+ /*  _varName: String;
   get varName(): String {
     return this._varName;
 }
   @Input() set varName(value: String) {
     this._varName = value;
     this.clearData();
-  }
+  } */
   
   dixPremiers: String[] = [];
   
   categoriesD: {};
+  fileName$: any;
 
-  constructor(private store:Store,private dataService:DataService) { 
+  constructor(
+
+    private store:Store,
+    private dataService:DataService
     
-    this.categoriesD = {}
+    ) { 
+    
+    
   }
 
   ngOnInit(): void {
-    this.store.subscribe((state:any)=>{
-      //console.log("data")
-      console.log(state)
 
-      let data = state.main.data
+
+    this.fileName$ = this.store.pipe(select(selectFileName))
+
+    this.store.pipe(select(selectData)).subscribe((data:any)=>{
+      //console.log("data")
+      //console.log(data)
      
       if(data != "**premier**"){
-        this.modifieCategories(data)
-
+        //this.dataService.modifieCategories(data)
+        
         this.dixPremiers.unshift(data)
         if(this.dixPremiers.length > 10){
           this.dixPremiers = this.dixPremiers.slice(0,10)
         }
 
       }
+
+
     })
   }
 
   clearData() {
 
-    this.categoriesD = {}
+    this.store.dispatch(clearSVGon({data:""}))
 
   }
 
-  modifieCategories(data: String) {
-    
-    if( Object.keys(this.categoriesD).includes(""+data) ){
-      this.categoriesD[""+data] = this.categoriesD[""+data] +1
-    }else{
-      this.categoriesD[""+data] = 1
-    }
+  stopStream() {
 
-    let categories = Object.keys(this.categoriesD).map((cat)=>{
-      return {categorie:cat,count:this.categoriesD[""+cat]}
-    })
-    this.dataService.categories$.next(categories)
+    this.store.dispatch(stopInterval({data:""}))
 
   }
 

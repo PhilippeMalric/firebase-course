@@ -26,6 +26,7 @@ import {MatDialogModule} from '@angular/material/dialog';
 import {MatSelectModule} from '@angular/material/select';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import {MatCheckboxModule} from '@angular/material/checkbox';
 import {ReactiveFormsModule} from '@angular/forms';
 import {HomeComponent} from './home/home.component';
 import {AboutComponent} from './about/about.component';
@@ -48,7 +49,11 @@ import { StoreModule } from '@ngrx/store';
 import { reducers, metaReducers } from './reducers';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { reducer } from './reducers/main.reducer';
-
+import { EffectsModule } from '@ngrx/effects';
+import { MainEffects } from './effects/main.effects';
+import { DataDivComponent } from './data-div/data-div.component';
+import { StreamDivComponent } from './stream-div/stream-div.component';
+import {MatGridListModule} from '@angular/material/grid-list';
 
 @NgModule({
   declarations: [
@@ -64,9 +69,13 @@ import { reducer } from './reducers/main.reducer';
     LoadCSVComponent,
     VarViewComponent,
     VarTestComponent,
-    Svg1Component
+    Svg1Component,
+    DataDivComponent,
+    StreamDivComponent
   ],
   imports: [
+    MatCheckboxModule,
+    MatGridListModule,
     NgxCsvParserModule,
     BrowserModule,
     BrowserAnimationsModule,
@@ -99,6 +108,7 @@ import { reducer } from './reducers/main.reducer';
     AngularFireAuthModule,
     AngularFireFunctionsModule,
     StoreModule.forRoot({ main: reducer }),
+    EffectsModule.forRoot([MainEffects]),
     !environment.production ? StoreDevtoolsModule.instrument() : []
   ],
   providers: [
@@ -109,3 +119,6 @@ import { reducer } from './reducers/main.reducer';
   bootstrap: [AppComponent]
 })
 export class AppModule { }
+
+
+
