@@ -16,6 +16,7 @@ export class DataService {
 
 mainVar$ : BehaviorSubject<String>
 dataset$ :  BehaviorSubject<any[]>
+datasetSVG$ : BehaviorSubject<any[]>
 categories$: BehaviorSubject<Statistique[]>;
 categoriesD: {};
 
@@ -34,6 +35,7 @@ categoriesD: {};
       this.categories$ = new BehaviorSubject<Statistique[]>([])
       this.categoriesD = {}
       this.dataset$ = new BehaviorSubject<any[]>([])
+      this.datasetSVG$ = new BehaviorSubject<any[]>([])
   }
 
   modifieCategories(data: String) {

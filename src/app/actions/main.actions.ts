@@ -68,6 +68,14 @@ export const updateNo_na = createAction(
   props<{ data:any }>()
 );
 
+export const updateFileName_map = createAction(
+  '[Data FileName_map] update FileName_map',
+  props<{ data:any }>()
+);
+
+
+
+
 export const increment = createAction('[Counter Component] Increment');
 export const decrement = createAction('[Counter Component] Decrement');
 export const reset = createAction('[Counter Component] Reset');

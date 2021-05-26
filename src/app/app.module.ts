@@ -54,6 +54,8 @@ import { MainEffects } from './effects/main.effects';
 import { DataDivComponent } from './data-div/data-div.component';
 import { StreamDivComponent } from './stream-div/stream-div.component';
 import {MatGridListModule} from '@angular/material/grid-list';
+import { LoadCSV_mapComponent } from './load-csv_map/load-csv_map.component';
+import { Svg1_mapComponent } from './svg1_map/svg1_map.component';
 
 @NgModule({
   declarations: [
@@ -71,7 +73,9 @@ import {MatGridListModule} from '@angular/material/grid-list';
     VarTestComponent,
     Svg1Component,
     DataDivComponent,
-    StreamDivComponent
+    StreamDivComponent,
+    LoadCSV_mapComponent,
+    Svg1_mapComponent
   ],
   imports: [
     MatCheckboxModule,

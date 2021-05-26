@@ -28,7 +28,7 @@ export interface  FileState {
 export const selectDataset = (state: any) => state.main.dataset;
 export const selectData = (state: any) => state.main.data;
 export const selectCategories = (state: any) => state.main.categories;
-
+export const selectFileName_map = (state: any) => state.main.fileName_map;
 export const selectInterval = (state: any) => state.main.interval;
 
 export const selectFileState = (state: any) => state.main.fileState;
@@ -36,6 +36,9 @@ export const selectFileName = createSelector(
   selectFileState,
   (state: FileState) => state.fileName
 );
+
+
+
 
 export const selectVarNames = createSelector(
   selectFileState,
