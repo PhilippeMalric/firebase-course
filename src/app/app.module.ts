@@ -56,6 +56,8 @@ import { StreamDivComponent } from './stream-div/stream-div.component';
 import {MatGridListModule} from '@angular/material/grid-list';
 import { LoadCSV_mapComponent } from './load-csv_map/load-csv_map.component';
 import { Svg1_mapComponent } from './svg1_map/svg1_map.component';
+import { D3Service, D3_DIRECTIVES } from './d3';
+import {MatSliderModule} from '@angular/material/slider';
 
 @NgModule({
   declarations: [
@@ -79,6 +81,7 @@ import { Svg1_mapComponent } from './svg1_map/svg1_map.component';
   ],
   imports: [
     MatCheckboxModule,
+    MatSliderModule,
     MatGridListModule,
     NgxCsvParserModule,
     BrowserModule,
@@ -116,6 +119,7 @@ import { Svg1_mapComponent } from './svg1_map/svg1_map.component';
     !environment.production ? StoreDevtoolsModule.instrument() : []
   ],
   providers: [
+      D3Service,
       { provide: USE_AUTH_EMULATOR, useValue: environment.useEmulators ? ['localhost', 9099] : undefined },
       { provide: USE_FIRESTORE_EMULATOR, useValue: environment.useEmulators ? ['localhost', 8080] : undefined },
       { provide: USE_FUNCTIONS_EMULATOR, useValue: environment.useEmulators ? ['localhost', 5001] : undefined }
