@@ -73,7 +73,14 @@ export const updateFileName_map = createAction(
   props<{ data:any }>()
 );
 
-
+export const updateFileName_dd = createAction(
+  '[Data FileName_dd] update FileName_dd',
+  props<{ data:any }>()
+);
+export const updateFocusVar = createAction(
+  '[Data FocusVar] update FocusVar',
+  props<{ data:any }>()
+);
 
 
 export const increment = createAction('[Counter Component] Increment');

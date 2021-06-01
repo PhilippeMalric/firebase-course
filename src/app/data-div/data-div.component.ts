@@ -15,10 +15,6 @@ export class DataDivComponent implements OnInit {
   data$: any;
   constructor(private store:Store) {
 
-    this.switchs = [{text:"No NA",my_f:this.no_na,checked:false}]
-
-
-
    }
 
   ngOnInit(): void {
@@ -27,16 +23,9 @@ export class DataDivComponent implements OnInit {
     
   }
 
-  no_na = (i)=>{
-    this.switchs[i].checked = ! this.switchs[i].checked
-    console.log("noNA")
-    this.store.dispatch( updateNo_na({data:this.switchs[i].checked}))
+  
 
-  }
-
-  switchChange= (f,i)=>{
-    f(i)
-  }
+ 
 
 
 

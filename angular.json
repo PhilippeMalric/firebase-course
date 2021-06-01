@@ -33,7 +33,7 @@
               "src/styles.scss"
             ],
             "scripts": [
-              
+              "node_modules/patternomaly/dist/patternomaly.js",
               "node_modules/jquery/dist/jquery.min.js",
               "node_modules/popper.js/dist/umd/popper.min.js",
               "node_modules/bootstrap/dist/js/bootstrap.min.js"
@@ -104,6 +104,7 @@
               
             ],
             "scripts": [
+              "node_modules/patternomaly/dist/patternomaly.js",
               "node_modules/jquery/dist/jquery.min.js",
               "node_modules/popper.js/dist/umd/popper.min.js",
               "node_modules/bootstrap/dist/js/bootstrap.min.js"]

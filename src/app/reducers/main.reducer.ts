@@ -1,7 +1,7 @@
 import { Action, createReducer, on } from '@ngrx/store';
 import { FileState } from '.';
 
-import { addData, clearSVGoff, clearSVGon, decrement, increment, stopInterval, updateCategories, updateData, updateFileMeta, updateFileName, updateFileName_map, updateFileSize, updateInterval, updateNo_na } from '../actions/main.actions';
+import { addData, clearSVGoff, clearSVGon, decrement, increment, stopInterval, updateCategories, updateData, updateFileMeta, updateFileName, updateFileName_dd, updateFileName_map, updateFileSize, updateFocusVar, updateInterval, updateNo_na } from '../actions/main.actions';
 
 
 export const mainFeatureKey = 'main';
@@ -14,7 +14,9 @@ export interface MainState {
   fileState:FileState,
   interval:Number,
   dataSet:any[],
-  fileName_map:string
+  fileName_map:string,
+  fileName_dd:string,
+  focusVar:string
 }
 
 
@@ -34,7 +36,9 @@ export const initialState: MainState = {
     }
   },
   interval:0,
-  fileName_map:""
+  fileName_map:"",
+  fileName_dd:"",
+  focusVar:""
 };
 
 
@@ -97,9 +101,18 @@ on(updateFileName_map, (state, { data }) => {
   console.log("updateFileName_map")
   console.log(data)
   return { ...state,fileName_map:data}
+}),
+
+on(updateFileName_dd, (state, { data }) => {
+  console.log("updateFileName_dd")
+  console.log(data)
+  return { ...state,fileName_dd:data}
+}),
+on(updateFocusVar, (state, { data }) => {
+  console.log("updateFocusVar")
+  console.log(data)
+  return { ...state,focusVar:data}
 })
-
-
 
 
 

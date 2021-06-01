@@ -1,24 +1,15 @@
 <div class="container">
-    <div class="mt-2 panel panel-primary">
-        <div class="panel-heading">Outils</div>
-        <div class="panel-body">
-            <mat-grid-list cols="4" rowHeight="100px">
-                <mat-grid-tile
-                    *ngFor="let switch of switchs;let i = index;"
-                    colspan="1"
-                    rowspan="1">
-                 
-                <mat-checkbox  class="" 
-                (click)="switch.my_f(i)">{{switch.text}} </mat-checkbox>
-                </mat-grid-tile>
-              </mat-grid-list>
-        </div>
-      </div>
     
-    
+    <app-switch-div></app-switch-div>
     <load-csv></load-csv>
-    <stream-div *ngIf="(fileName$|async) != ''"></stream-div>
-    <var-test *ngIf="(data$|async) != '**booting**'"></var-test>
+    <load-csv-dd></load-csv-dd>
+    <stat-div *ngIf="(fileName$|async) != ''"></stat-div>
+    <!--
+<stream-div *ngIf="(fileName$|async) != ''"></stream-div>
 
-    
+*ngIf="(data$|async) != '**booting**'"
+    --> 
+    <var-test ></var-test>
+    <myTable></myTable>
+    <testdd></testdd>
 </div>

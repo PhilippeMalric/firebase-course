@@ -1,12 +1,17 @@
 import { ChangeDetectorRef } from '@angular/core';
 import { Component, Input, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
+
 import * as d3 from 'd3';
 import { map } from 'd3';
 import { Subscription } from 'rxjs';
 import { selectCategories } from '../reducers';
 import { MainState } from '../reducers/main.reducer';
 import { DataService } from '../services/data.service';
+import Chart from 'chart.js/auto';
+import { generate } from 'patternomaly';
+import { GoogleChartInterface } from 'ng2-google-charts';
+
 
 @Component({
   selector: 'app-svg1',
@@ -22,9 +27,31 @@ export class Svg1Component implements OnInit {
   private width = 750 - (this.margin * 2);
   private height = 400 - (this.margin * 2);
   private h2 = 450
+  private backgroundC = generate([
+    '#e6194b', '#3cb44b', '#ffe119', '#4363d8', '#f58231', '#911eb4', '#46f0f0', 
+    '#f032e6', '#bcf60c', '#fabebe', '#008080', '#e6beff', '#9a6324', '#fffac8', '#800000', 
+    '#aaffc3', '#808000', '#ffd8b1', '#000075', '#808080', '#ffffff', '#000000'
+  ]);
+
+  
+  private borderColor = this.backgroundC
+
 
   sub1: Subscription;
   x: d3.ScaleBand<string>;
+  canvas: any;
+  ctx: any;
+  myChart: any;
+  graph: { data: ({ x: number[]; y: number[]; type: string; mode: string; marker: { color: string; }; } | { x: number[]; y: number[]; type: string; mode?: undefined; marker?: undefined; })[]; layout: { width: number; height: number; title: string; }; };
+ 
+  rows: any[];
+  dt: any
+  calendar: GoogleChartInterface;
+  chartDate: boolean=false;
+
+
+ 
+
   constructor(
     
     private dataService:DataService,
@@ -33,15 +60,14 @@ export class Svg1Component implements OnInit {
 
     
   ngOnInit(): void {
-    
+
+    this.ctx = 'myChart'; 
     this.createSvg()
     this.dataService.categories$
     .subscribe((data:any)=>{
-      //console.log("svg")
-      //console.log(data)
-      if(Object.keys(data).length > 0){
-        this.drawBars(data)
-      }
+      console.log("svg")
+      console.log(data)
+      this.createGraph(data)
       
       //this.ref.markForCheck()
     })
@@ -55,6 +81,87 @@ export class Svg1Component implements OnInit {
         //this.createSvg()
       }
     })
+  }
+
+  ngAfterViewInit() {
+    
+  }
+
+
+
+  createGraph(data: any) {
+    if(data.length > 0 ){
+
+      let data_count = data.map(x=>x.count)
+      console.log(data_count)
+      let data2 = {
+        labels: data.map(x=>x.categorie),
+        datasets: [{
+          label: "",
+          data: data_count,
+          backgroundColor: this.backgroundC.slice(0,data.length),
+          borderColor: this.borderColor.slice(0,data.length),
+          borderWidth: 1
+        }]
+      };
+
+      if(this.myChart){
+        this.myChart.destroy();
+      }
+
+      if(data.length < 20){
+
+        this.chartDate = false
+
+        this.myChart = new Chart(this.ctx,
+          {
+            type: 'bar',
+            data: data2,
+            options: {
+              indexAxis:"y",
+              scales: {
+                y: {
+                  beginAtZero: true
+                }
+              }
+            },
+          })
+      }
+      else{
+        console.log("data[1].categorie")
+        console.log(data[1].categorie)
+
+        if(data[1].categorie.split(" ")[0].split("-").length > 2 ){
+
+          this.chartDate = true
+
+          this.rows = data.filter((x)=>x.categorie != 'NA' && x.categorie != '').map((x)=>{
+          
+            let date = x.categorie.split(" ")[0].split("-")
+            
+            return[new Date(date[0],Number(date[1])-1,date[2]),x.count]})
+  
+          
+  
+  
+            this.calendar = {
+              chartType: 'Calendar',
+              dataTable: this.rows,
+              firstRowIsData: true,
+              options: {
+                height: 400 ,
+                'title': 'Tasks'},
+            };
+         
+  
+        }
+        }
+        
+
+      
+        
+      this.drawBars(data)
+    }
   }
 
   ngOnDestroy(){
@@ -83,6 +190,8 @@ export class Svg1Component implements OnInit {
     
     this.svg.selectAll("*").remove()
    
+    let mymax = d3.max(data.map(x=>x.count))
+
     //console.log(data)
     // Create the X-axis band scale
     this.x = d3.scaleBand()
@@ -102,7 +211,7 @@ export class Svg1Component implements OnInit {
 
     // Create the Y-axis band scale
     const y = d3.scaleLinear()
-    .domain([0, 200])
+    .domain([0, mymax])
     .range([this.height, 0]);
 
     // Draw the Y-axis on the DOM

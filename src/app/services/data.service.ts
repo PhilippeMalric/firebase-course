@@ -19,6 +19,9 @@ dataset$ :  BehaviorSubject<any[]>
 datasetSVG$ : BehaviorSubject<any[]>
 categories$: BehaviorSubject<Statistique[]>;
 categoriesD: {};
+dd$: BehaviorSubject<any[]>;
+variablesdd$: BehaviorSubject<any[]>;
+categoriesdd$: BehaviorSubject<any[]>;
 
   constructor(private db: AngularFirestore,private store:Store) { 
 
@@ -31,11 +34,14 @@ categoriesD: {};
             }
         })
 
+      
       this.mainVar$ = new BehaviorSubject<String>("**premier**")
       this.categories$ = new BehaviorSubject<Statistique[]>([])
       this.categoriesD = {}
       this.dataset$ = new BehaviorSubject<any[]>([])
       this.datasetSVG$ = new BehaviorSubject<any[]>([])
+      this.categoriesdd$ = new BehaviorSubject<any[]>([])
+      this.variablesdd$ = new BehaviorSubject<any[]>([])
   }
 
   modifieCategories(data: String) {

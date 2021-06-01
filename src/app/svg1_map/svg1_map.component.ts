@@ -5,6 +5,7 @@ import * as d3 from 'd3';
 import { map } from 'd3';
 import { Subscription } from 'rxjs';
 import { D3Service } from '../d3';
+
 import { selectCategories } from '../reducers';
 import { MainState } from '../reducers/main.reducer';
 import { DataService } from '../services/data.service';
@@ -17,9 +18,10 @@ import { DataService } from '../services/data.service';
 export class Svg1_mapComponent implements OnInit {
   myColor: d3.ScaleLinear<number, number, never>;
   color: any;
-  k: any=5;
+  k: any;
   myData: any;
   slideMax: number;
+  g1: any;
   
 
   @HostListener('window:resize', ['$event'])
@@ -48,6 +50,7 @@ export class Svg1_mapComponent implements OnInit {
   ngOnInit(): void {
     
     this.createSvg()
+ 
     this.dataService.datasetSVG$
     .subscribe((data:any)=>{
       console.log("svg_map")
@@ -55,7 +58,8 @@ export class Svg1_mapComponent implements OnInit {
       if(Object.keys(data).length > 0){
         this.names =  data.shift()
         this.myData = data
-        this.slideMax = data.length - 5
+        this.slideMax = data[0].length - 4 
+        this.k = 4
         this.drawMAp(data)
       }
       
@@ -81,36 +85,25 @@ export class Svg1_mapComponent implements OnInit {
     console.log(event.value)
     if(this.myData){
       
-      this.k = event.value +4
+      this.k = event.value +3
       this.drawMAp(this.myData)
 
     }
-    
-
-
   }
 
   
   private createSvg(): void {
    
     this.varName = ""
-    this.color  = ["blue", "green"]
-
-    this.myColor = d3.scaleLinear()
-    .domain([-1, 0, 1])
-    .range(this.color);
-
-    const zoom = d3.zoom()
-    .scaleExtent([1, 8])
-    .on('zoom', this.zoomed);
+    //this.color  = ["blue", "green","red"]
+    this.color  = ["white", "grey","black"]
 
     this.svg = d3.select("figure#bar")
     .append("svg")
-    .attr("width", 2000)
-    .attr("height", 2000)
-    .append("g")
-    .attr("transform", "translate(" + "-11000" + "," + "-10500" + ")");
-    
+    .attr("width", 50000)
+    .attr("height", 50000)
+
+
     //console.log("svg" )
     //console.log(this.svg )
   }
@@ -127,9 +120,12 @@ export class Svg1_mapComponent implements OnInit {
 
     let mymin = d3.min(dataP)
     let mymax = d3.max(dataP)
+    let middle = Math.round(mymax / 2)
+
+    console.log(mymin,mymax)
 
     this.myColor = d3.scaleLinear()
-    .domain([mymin,mymax])
+    .domain([mymin,middle,mymax])
     .range(this.color);
 
 
@@ -142,25 +138,62 @@ export class Svg1_mapComponent implements OnInit {
 
     this.svg.selectAll("*").remove()
 
+
+    this.g1 = this.svg.append("g")
+    .attr("transform", "translate(" + "-28000" + "," + "-28500" + ")");
+    
+
     // Create the Map
-    this.svg.selectAll("Map")
+    this.g1.selectAll("Map")
     .data(data)
     .enter()
     .append("path")
-    .attr("d",  d => (d[4])?(d[4]):"")
+    .attr("d",  d => (d[3])?(d[3]):"")
     .attr("stroke", "black")
     .attr("fill", d => (d[this.k])?this.myColor(Number(d[this.k])):"white")
+    .append("title").text(d=>"RSA : "+d[0]+" | n : "+d[this.k])
+
+   
+
+
+      var g = this.svg.append("g").attr("transform", "translate(" + "10" + ", 0)");
+
+        
+
+      let array_legend = [...Array(10).keys()]
+      let legend_scale = d3.scaleLinear()
+        .range([mymin,mymax])
+        .domain([0, array_legend.length-1]);
 
 
 
+        g.append("rect")
+        .attr("x",-5)
+        .attr("y",30)
+        .attr("width",50 *10 +5)
+        .attr("height",80)
+        .attr("fill","white")
 
-    
+        g.selectAll(".legend").data(array_legend).enter()
+        .append("rect")
+        .attr("x",d=>d *50)
+        .attr("y",50)
+        .attr("width",50)
+        .attr("height",50)
+        .attr("fill",d=> this.myColor(legend_scale(d)))
+
+        
+
+
+
+        g.selectAll(".text").data(array_legend).enter()
+        .append("text")
+        .attr("x",d=>d *50 + 5)
+        .attr("y",48)
+        .attr("font-family","Verdana")
+        .attr("font-size",20)
+        .text(d=> Math.round(legend_scale(d)))
+
   }
-
-   zoomed() {
-
-  }
-
-
 }
 

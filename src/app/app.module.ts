@@ -58,6 +58,19 @@ import { LoadCSV_mapComponent } from './load-csv_map/load-csv_map.component';
 import { Svg1_mapComponent } from './svg1_map/svg1_map.component';
 import { D3Service, D3_DIRECTIVES } from './d3';
 import {MatSliderModule} from '@angular/material/slider';
+import { SwitchDivComponent } from './switch-div/switch-div.component';
+import { StatDivComponent } from './stat-div/stat-div.component';
+import { TestChartComponent } from './chart/test-chart/test-chart.component';
+
+import { myTableComponent } from './chart/table/mytable.component';
+import { GoogleChartsModule } from 'angular-google-charts';
+import { Ng2GoogleChartsModule } from 'ng2-google-charts';
+import { LoadCSV_ddComponent } from './load-csv_dd/load-csv_dd.component';
+import { TestddComponent } from './dd/testdd/testdd.component';
+
+
+
+
 
 @NgModule({
   declarations: [
@@ -77,7 +90,13 @@ import {MatSliderModule} from '@angular/material/slider';
     DataDivComponent,
     StreamDivComponent,
     LoadCSV_mapComponent,
-    Svg1_mapComponent
+    Svg1_mapComponent,
+    SwitchDivComponent,
+    StatDivComponent,
+    TestChartComponent,
+    myTableComponent,
+    LoadCSV_ddComponent,
+    TestddComponent
   ],
   imports: [
     MatCheckboxModule,
@@ -116,6 +135,7 @@ import {MatSliderModule} from '@angular/material/slider';
     AngularFireFunctionsModule,
     StoreModule.forRoot({ main: reducer }),
     EffectsModule.forRoot([MainEffects]),
+    Ng2GoogleChartsModule,
     !environment.production ? StoreDevtoolsModule.instrument() : []
   ],
   providers: [
