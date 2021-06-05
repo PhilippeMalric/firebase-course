@@ -4,7 +4,7 @@ import { FormControl } from '@angular/forms';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { map, startWith, take, tap, withLatestFrom } from 'rxjs/operators';
-import { addData, updateFocusVar, updateInterval } from '../actions/main.actions';
+import { addData, updateFocusVar, updateInterval, updateVarName } from '../actions/main.actions';
 import { selectDataset, selectFileName, selectForStream, selectInterval, selectVarNames } from '../reducers';
 import { DataService } from '../services/data.service';
 
@@ -63,6 +63,8 @@ export class StatDivComponent implements OnInit {
     this.currentIndex = 0
 
     console.log("stat1")
+
+    this.store.dispatch(updateVarName({data:this.myControl.value}))
 
     this.dataService.dataset$.pipe(take(1),
       tap(console.log)

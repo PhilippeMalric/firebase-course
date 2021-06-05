@@ -81,7 +81,10 @@ export const updateFocusVar = createAction(
   '[Data FocusVar] update FocusVar',
   props<{ data:any }>()
 );
-
+export const updateVarName = createAction(
+  '[Data updateVarName] update VarName',
+  props<{ data:any }>()
+);
 
 export const increment = createAction('[Counter Component] Increment');
 export const decrement = createAction('[Counter Component] Decrement');

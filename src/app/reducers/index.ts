@@ -24,7 +24,7 @@ export interface  FileState {
   metaInfo: MetaInfo
 }
 
-
+export const selectVarName = (state: any) => state.main.varName;
 export const selectDataset = (state: any) => state.main.dataset;
 export const selectData = (state: any) => state.main.data;
 export const selectCategories = (state: any) => state.main.categories;

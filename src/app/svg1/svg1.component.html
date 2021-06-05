@@ -1,10 +1,10 @@
 <h2>Bar Chart</h2>
-<div *ngIf="!chartDate" >
+<div *ngIf="jsChart" >
     <figure id="bar"></figure>
     <canvas id="myChart" width="1200px" height="400"></canvas>
     
 </div>
 <div >
-    <google-chart style="height: 400px;" *ngIf="calendar && chartDate" [data]="calendar"></google-chart>
+    <google-chart style="height: 400px;" *ngIf="reset && calendar" [data]="calendar"></google-chart>
 
 </div>

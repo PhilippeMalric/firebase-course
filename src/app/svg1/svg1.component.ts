@@ -5,12 +5,13 @@ import { select, Store } from '@ngrx/store';
 import * as d3 from 'd3';
 import { map } from 'd3';
 import { Subscription } from 'rxjs';
-import { selectCategories } from '../reducers';
+import { selectCategories, selectVarName } from '../reducers';
 import { MainState } from '../reducers/main.reducer';
 import { DataService } from '../services/data.service';
 import Chart from 'chart.js/auto';
 import { generate } from 'patternomaly';
 import { GoogleChartInterface } from 'ng2-google-charts';
+import { withLatestFrom } from 'rxjs/operators';
 
 
 @Component({
@@ -47,8 +48,9 @@ export class Svg1Component implements OnInit {
   rows: any[];
   dt: any
   calendar: GoogleChartInterface;
-  chartDate: boolean=false;
-
+  jsChart: boolean=false;
+  reset: boolean;
+ 
 
  
 
@@ -90,8 +92,12 @@ export class Svg1Component implements OnInit {
 
 
   createGraph(data: any) {
-    if(data.length > 0 ){
 
+    this.reset = false
+
+    if(data.length > 0 ){
+      
+     
       let data_count = data.map(x=>x.count)
       console.log(data_count)
       let data2 = {
@@ -110,33 +116,39 @@ export class Svg1Component implements OnInit {
       }
 
       if(data.length < 20){
-
-        this.chartDate = false
-
-        this.myChart = new Chart(this.ctx,
-          {
-            type: 'bar',
-            data: data2,
-            options: {
-              indexAxis:"y",
-              scales: {
-                y: {
-                  beginAtZero: true
+        this.jsChart = true
+        setTimeout(() => {
+          
+          this.myChart = new Chart(this.ctx,
+            {
+              type: 'bar',
+              data: data2,
+              options: {
+                indexAxis:"y",
+                scales: {
+                  y: {
+                    beginAtZero: true
+                  }
                 }
-              }
-            },
-          })
+              },
+            })
+        }, 100);
+        this.createPieChart(data)
+
       }
       else{
         console.log("data[1].categorie")
         console.log(data[1].categorie)
-
+        this.jsChart = false
         if(data[1].categorie.split(" ")[0].split("-").length > 2 ){
-
-          this.chartDate = true
-
-          this.rows = data.filter((x)=>x.categorie != 'NA' && x.categorie != '').map((x)=>{
           
+          setTimeout(() => {
+            this.jsChart = true
+            this.reset = true
+
+
+            this.rows = data.filter((x)=>x.categorie != 'NA' && x.categorie != '').map((x)=>{
+            
             let date = x.categorie.split(" ")[0].split("-")
             
             return[new Date(date[0],Number(date[1])-1,date[2]),x.count]})
@@ -150,12 +162,17 @@ export class Svg1Component implements OnInit {
               firstRowIsData: true,
               options: {
                 height: 400 ,
+                width : 1200,
                 'title': 'Tasks'},
             };
          
   
-        }
-        }
+          }, 100);
+          
+      }else{
+        setTimeout(() => {
+          this.createPieChart(data)},100)
+      }
         
 
       
@@ -163,6 +180,10 @@ export class Svg1Component implements OnInit {
       this.drawBars(data)
     }
   }
+}
+
+
+
 
   ngOnDestroy(){
     this.sub1.unsubscribe()
@@ -230,4 +251,64 @@ export class Svg1Component implements OnInit {
     .attr("fill", "#d04a35");
   }
 
+  createPieChart = (data)=>{
+
+      this.dataService.categoriesdd$.
+      pipe(
+        withLatestFrom(
+          this.store.pipe(select(selectVarName))
+          )).subscribe(([dd,varName]) => {
+    
+        console.log(dd)
+        let myCompare = function(dataA,dataB){
+    
+          let codeA = dd.filter(data3=>data3.title == varName && data3.answer_fr == dataA[0])
+          let codeB = dd.filter(data3=>data3.title == varName && data3.answer_fr == dataB[0])
+    
+          console.log("codeA")
+          console.log(codeA)
+          console.log("codeB")
+          console.log(codeB)
+          if(codeA.length == 0 || codeB.length == 0){
+            console.log("probleme") 
+          }
+    
+          return Number(codeA[0].code) - Number(codeB[0].code)
+    
+        }
+        this.reset = true
+    
+        this.rows = data.filter((x)=>x.categorie != 'NA' && x.categorie != '').map((x)=>{
+        
+          return[x.categorie,x.count]
+        })
+    
+        if(dd.filter(data=>data.title == varName).length > 0){
+          this.rows.sort(myCompare)
+        }else{
+          this.rows.sort((a,b)=>Number(a[0])-Number(b[0]))
+        }
+        
+    
+      
+    
+    
+        this.calendar = {
+          chartType: 'PieChart',
+          dataTable: this.rows,
+          firstRowIsData: true,
+          options: {
+            is3D: true,
+            height: 800 ,
+            width : 900,
+            'title': 'Tasks'},
+        };
+     
+    
+      });
+    }
+    
 }
+
+
+
