@@ -12,6 +12,7 @@ import { LoadCSVComponent } from './load-csv/load-csv.component';
 import { VarViewComponent } from './var-view/var-view.component';
 import { DataDivComponent } from './data-div/data-div.component';
 import { LoadCSV_mapComponent } from './load-csv_map/load-csv_map.component';
+import { TableauCroiseComponent } from './tableau-croise/tableau-croise.component';
 
 const routes: Routes = [
   {
@@ -54,6 +55,11 @@ const routes: Routes = [
         course: CourseResolver
     }
   },
+  {
+    path: 'tb',
+    component: TableauCroiseComponent
+  },
+  
   {
     path: '**',
     redirectTo: '/'

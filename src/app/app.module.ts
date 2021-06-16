@@ -67,6 +67,10 @@ import { GoogleChartsModule } from 'angular-google-charts';
 import { Ng2GoogleChartsModule } from 'ng2-google-charts';
 import { LoadCSV_ddComponent } from './load-csv_dd/load-csv_dd.component';
 import { TestddComponent } from './dd/testdd/testdd.component';
+import { TableauCroiseComponent } from './tableau-croise/tableau-croise.component';
+import { SelectVarsComponent } from './select-vars/select-vars.component';
+import { DdVarNameComponent } from './dd/dd-var-name/dd-var-name.component';
+import { CrossVarComponent } from './chart/cross-var/cross-var.component';
 
 
 
@@ -96,7 +100,11 @@ import { TestddComponent } from './dd/testdd/testdd.component';
     TestChartComponent,
     myTableComponent,
     LoadCSV_ddComponent,
-    TestddComponent
+    TestddComponent,
+    TableauCroiseComponent,
+    SelectVarsComponent,
+    DdVarNameComponent,
+    CrossVarComponent
   ],
   imports: [
     MatCheckboxModule,

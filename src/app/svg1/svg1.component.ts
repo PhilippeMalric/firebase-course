@@ -11,7 +11,7 @@ import { DataService } from '../services/data.service';
 import Chart from 'chart.js/auto';
 import { generate } from 'patternomaly';
 import { GoogleChartInterface } from 'ng2-google-charts';
-import { withLatestFrom } from 'rxjs/operators';
+import { take, withLatestFrom } from 'rxjs/operators';
 
 
 @Component({
@@ -133,7 +133,8 @@ export class Svg1Component implements OnInit {
               },
             })
         }, 100);
-        this.createPieChart(data)
+        setTimeout(() => {
+          this.createPieChart(data)},200)
 
       }
       else{
@@ -141,33 +142,37 @@ export class Svg1Component implements OnInit {
         console.log(data[1].categorie)
         this.jsChart = false
         if(data[1].categorie.split(" ")[0].split("-").length > 2 ){
-          
-          setTimeout(() => {
-            this.jsChart = true
-            this.reset = true
+          this.jsChart = false
+          this.store.pipe(select(selectVarName),take(1)).subscribe((varName)=>{
 
+            setTimeout(() => {
+              this.reset = true
+              let years = {}
+  
+              this.rows = data.filter((x)=>x.categorie != 'NA' && x.categorie != '').map((x)=>{
+              
+              let date = x.categorie.split(" ")[0].split("-")
+              years[date[0]]=1
+              return[new Date(date[0],Number(date[1])-1,date[2]),x.count]})
+    
+            let numberOfYear = Object.keys(years).length
+    
+    
+              this.calendar = {
+                chartType: 'Calendar',
+                dataTable: this.rows,
+                firstRowIsData: true,
+                options: {
+                  height: 200 * numberOfYear ,
+                  width : 1200,
+                  'title': varName },
+              };
+           
+    
+            }, 100);
 
-            this.rows = data.filter((x)=>x.categorie != 'NA' && x.categorie != '').map((x)=>{
-            
-            let date = x.categorie.split(" ")[0].split("-")
-            
-            return[new Date(date[0],Number(date[1])-1,date[2]),x.count]})
-  
+          })
           
-  
-  
-            this.calendar = {
-              chartType: 'Calendar',
-              dataTable: this.rows,
-              firstRowIsData: true,
-              options: {
-                height: 400 ,
-                width : 1200,
-                'title': 'Tasks'},
-            };
-         
-  
-          }, 100);
           
       }else{
         setTimeout(() => {
@@ -256,40 +261,70 @@ export class Svg1Component implements OnInit {
       this.dataService.categoriesdd$.
       pipe(
         withLatestFrom(
-          this.store.pipe(select(selectVarName))
+          this.store.pipe(select(selectVarName),take(1))
           )).subscribe(([dd,varName]) => {
     
         console.log(dd)
         let myCompare = function(dataA,dataB){
     
-          let codeA = dd.filter(data3=>data3.title == varName && data3.answer_fr == dataA[0])
-          let codeB = dd.filter(data3=>data3.title == varName && data3.answer_fr == dataB[0])
+          let codeA = dd.filter(data3=>data3.title == varName && data3.answer_fr.slice(0, 120) == dataA[0])
+          let codeB = dd.filter(data3=>data3.title == varName && data3.answer_fr.slice(0, 120) == dataB[0])
     
-          console.log("codeA")
-          console.log(codeA)
-          console.log("codeB")
-          console.log(codeB)
+          // console.log("codeA")
+          // console.log(codeA)
+          // console.log(dataA[0])
+          // console.log("codeB")
+          // console.log(codeB)
           if(codeA.length == 0 || codeB.length == 0){
-            console.log("probleme") 
+            console.log("probleme")
+              console.log(dataA[0])
+            console.log(dataB[0]) 
           }
-    
+          if(!codeA || codeB || ! ('code' in codeA[0]) || ! ("code" in codeB[0])){
+
+            // console.log(dataA[0])
+            // console.log(dataB[0])
+            // console.log(dd.filter(data3=>data3.title == varName).map(x=>x.answer_fr.slice(0, 120)))
+            
+            return 0
+          }
           return Number(codeA[0].code) - Number(codeB[0].code)
     
         }
         this.reset = true
-    
-        this.rows = data.filter((x)=>x.categorie != 'NA' && x.categorie != '').map((x)=>{
-        
-          return[x.categorie,x.count]
+
+
+        let allNum = data.filter((x)=>x.categorie != 'NA' && 
+              x.categorie != ''&& x.categorie != 'Other').filter((x)=>{
+
+          return !isNaN(Number(x.categorie))
+
+        }).length != 0 
+
+        if(allNum){
+          this.rows = data.filter((x)=>x.categorie != 'NA' && x.categorie != '').map((x)=>{
+            return [x.categorie,x.count]
         })
-    
+        }else{
+          this.rows = data.filter((x)=>x.categorie != 'NA' && x.categorie != '').map((x)=>{
+        
+            if(dd.filter(data3=>data3.title == varName && 
+              data3.answer_fr.slice(0, 120) == x.categorie).length > 0){
+                return [dd.filter(data3=>data3.title == varName && data3.answer_fr.slice(0, 120) == x.categorie)[0].answer_fr,x.count]
+            }
+            console.log("prob1")
+            return["erreur",x.count]
+          })
+      
+        }
+        
         if(dd.filter(data=>data.title == varName).length > 0){
           this.rows.sort(myCompare)
         }else{
           this.rows.sort((a,b)=>Number(a[0])-Number(b[0]))
         }
         
-    
+    console.log(this.rows)
       
     
     
@@ -301,7 +336,7 @@ export class Svg1Component implements OnInit {
             is3D: true,
             height: 800 ,
             width : 900,
-            'title': 'Tasks'},
+            'title': varName},
         };
      
     

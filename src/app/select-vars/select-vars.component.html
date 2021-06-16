@@ -1,0 +1,66 @@
+<div class="row">
+    <mat-card *ngIf="(fileName$|async) != ''" class="col-5 me-auto">
+        <mat-card-header>
+        <mat-card-title>
+            Sélection de la variable 1
+        </mat-card-title>
+        <mat-card-subtitle>
+            {{fileName$|async}}
+        </mat-card-subtitle>
+        </mat-card-header>
+    
+    
+        <mat-card-content>
+        <form class="form">
+            <mat-form-field class="example-full-width">
+            <mat-label>Var Name</mat-label>
+            <input type="text"
+                    placeholder="Pick one"
+                    aria-label="Number"
+                    matInput
+                    [formControl]="myControl1"
+                    [matAutocomplete]="auto">
+            <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+                <mat-option *ngFor="let option of filteredOptions1 | async" [value]="option">
+                {{option}}
+                </mat-option>
+            </mat-autocomplete>
+            </mat-form-field>
+        </form>
+        <ddVarName varIndex="0"></ddVarName>
+        </mat-card-content>
+    </mat-card>
+
+    <mat-card *ngIf="(fileName$|async) != ''" class="col-5 me-auto">
+        <mat-card-header>
+        <mat-card-title>
+            Sélection de la variable 2
+        </mat-card-title>
+        <mat-card-subtitle>
+            {{fileName$|async}}
+        </mat-card-subtitle>
+        </mat-card-header>
+    
+    
+        <mat-card-content>
+        <form class="form">
+            <mat-form-field class="example-full-width">
+            <mat-label>Var Name</mat-label>
+            <input type="text"
+                    placeholder="Pick one"
+                    aria-label="Number"
+                    matInput
+                    [formControl]="myControl2"
+                    [matAutocomplete]="auto">
+            <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+                <mat-option *ngFor="let option of filteredOptions2 | async" [value]="option">
+                {{option}}
+                </mat-option>
+            </mat-autocomplete>
+            </mat-form-field>
+        </form>
+        <ddVarName varIndex="1"></ddVarName>
+        </mat-card-content>
+    </mat-card>
+</div>
+<button class="m-5" mat-raised-button >Stat!</button>

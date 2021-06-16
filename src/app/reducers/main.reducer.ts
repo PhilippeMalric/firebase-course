@@ -1,7 +1,7 @@
 import { Action, createReducer, on } from '@ngrx/store';
 import { FileState } from '.';
 
-import { addData, clearSVGoff, clearSVGon, decrement, increment, stopInterval, updateCategories, updateData, updateFileMeta, updateFileName, updateFileName_dd, updateFileName_map, updateFileSize, updateFocusVar, updateInterval, updateNo_na, updateVarName } from '../actions/main.actions';
+import { addData, clearSVGoff, clearSVGon, decrement, increment, stopInterval, updateCategories, updateCrossVar, updateCrossVar1, updateCrossVar2, updateData, updatedd, updateFileMeta, updateFileName, updateFileName_dd, updateFileName_map, updateFileSize, updateFocusVar, updateInterval, updateNo_na, updateVarName } from '../actions/main.actions';
 
 
 export const mainFeatureKey = 'main';
@@ -17,7 +17,9 @@ export interface MainState {
   fileName_map:string,
   fileName_dd:string,
   focusVar:string,
-  varName:string
+  varName:string,
+  crossVar:any,
+  updatedd:Number
 }
 
 
@@ -40,7 +42,9 @@ export const initialState: MainState = {
   fileName_map:"",
   fileName_dd:"",
   focusVar:"",
-  varName:""
+  varName:"",
+  crossVar:{"0":"","1":""},
+  updatedd:0
 };
 
 
@@ -119,6 +123,26 @@ on(updateVarName, (state, { data }) => {
   console.log("updateVarName")
   console.log(data)
   return { ...state,varName:data}
+}),
+on(updateCrossVar, (state, { data }) => {
+  console.log("updateCrossVar")
+  console.log(data)
+  return { ...state,crossVar:data}
+}),
+on(updateCrossVar1, (state, { data }) => {
+  console.log("updateCrossVar1")
+  console.log(data)
+  return { ...state,crossVar:{"0":data,"1":state.crossVar["1"]}}
+}),
+on(updateCrossVar2, (state, { data }) => {
+  console.log("updateCrossVar2")
+  console.log(data)
+  return { ...state,crossVar:{"0":state.crossVar["0"],"1":data}}
+}),
+on(updatedd, (state, { data }) => {
+  console.log("updatedd")
+  console.log(data)
+  return { ...state,updatedd:data}
 })
 
 

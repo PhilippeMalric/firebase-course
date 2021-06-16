@@ -86,6 +86,24 @@ export const updateVarName = createAction(
   props<{ data:any }>()
 );
 
+export const updateCrossVar = createAction(
+  '[Data updateCrossVar] update updateCrossVar',
+  props<{ data:any }>()
+);
+export const updateCrossVar1 = createAction(
+  '[Data updateCrossVar1] update updateCrossVar1',
+  props<{ data:any }>()
+);
+export const updateCrossVar2 = createAction(
+  '[Data updateCrossVar2] update updateCrossVar2',
+  props<{ data:any }>()
+);
+export const updatedd = createAction(
+  '[Data updatedd] update updatedd',
+  props<{ data:any }>()
+);
+
+
 export const increment = createAction('[Counter Component] Increment');
 export const decrement = createAction('[Counter Component] Decrement');
 export const reset = createAction('[Counter Component] Reset');

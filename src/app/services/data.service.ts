@@ -1,12 +1,13 @@
 
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { Store } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 import { BehaviorSubject, from, Observable } from 'rxjs';
-import { concatMap, map } from 'rxjs/operators';
+import { concatMap, map, withLatestFrom } from 'rxjs/operators';
 import { updateCategories } from '../actions/main.actions';
 import { Statistique } from '../model/statistique';
 import { Variable } from '../model/variable';
+import { selectCrossVar } from '../reducers';
 import { convertSnaps } from './db-utils';
 
 @Injectable({
@@ -22,8 +23,18 @@ categoriesD: {};
 dd$: BehaviorSubject<any[]>;
 variablesdd$: BehaviorSubject<any[]>;
 categoriesdd$: BehaviorSubject<any[]>;
+crossVarCompte$: BehaviorSubject<any[]>;
 
   constructor(private db: AngularFirestore,private store:Store) { 
+
+    this.mainVar$ = new BehaviorSubject<String>("**premier**")
+    this.crossVarCompte$ = new BehaviorSubject<Statistique[]>([])
+    this.categories$ = new BehaviorSubject<Statistique[]>([])
+    this.categoriesD = {}
+    this.dataset$ = new BehaviorSubject<any[]>([])
+    this.datasetSVG$ = new BehaviorSubject<any[]>([])
+    this.categoriesdd$ = new BehaviorSubject<any[]>([])
+    this.variablesdd$ = new BehaviorSubject<any[]>([])
 
         this.store.subscribe((state:any)=>{
             let clear = state.main.clearState
@@ -33,15 +44,47 @@ categoriesdd$: BehaviorSubject<any[]>;
       
             }
         })
+        this.store.pipe(
+          select(selectCrossVar),
+          withLatestFrom(this.dataset$)).subscribe(([data,dataset])=>{
+            if(data && 
+              data["0"] != "" && data["1"] != "" && 
+              dataset.length > 0){
+                this.crossVarCompte$.next(this.createCompte(data,dataset))
+              }
 
+          
+        })
       
-      this.mainVar$ = new BehaviorSubject<String>("**premier**")
-      this.categories$ = new BehaviorSubject<Statistique[]>([])
-      this.categoriesD = {}
-      this.dataset$ = new BehaviorSubject<any[]>([])
-      this.datasetSVG$ = new BehaviorSubject<any[]>([])
-      this.categoriesdd$ = new BehaviorSubject<any[]>([])
-      this.variablesdd$ = new BehaviorSubject<any[]>([])
+  }
+
+
+  createCompte(vars,dataset){
+
+    console.log(vars,dataset)
+    console.log(vars["0"],vars["1"])
+    let n1 = dataset[0].indexOf(vars["0"])
+    let n2 = dataset[0].indexOf(vars["1"])
+    console.log(n1,n2)
+    /*
+    if(arr[1].split(" ")[0].split("-").length > 2 ){
+      arr = arr.map(x=>x.split(" ")[0])
+
+    }
+    */
+    var counts = {};
+    for (var i = 1; i < dataset.length; i++) {
+        counts[dataset[i][n1]+" - "+dataset[i][n2]] = 1 + (counts[dataset[i][n1]+" - "+dataset[i][n2]] || 0);
+    }
+
+    let result = Object.keys(counts).sort().map((key)=>{
+      return {categorie:key,count:counts[key]}
+    })
+
+console.log("result")
+console.log(result)
+
+    return result
   }
 
   modifieCategories(data: String) {

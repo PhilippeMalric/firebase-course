@@ -3,7 +3,7 @@ import { Actions, createEffect, Effect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { EMPTY } from 'rxjs';
 import { tap, withLatestFrom } from 'rxjs/operators';
-import { addData, clearSVGoff, clearSVGon, decrement, increment, updateCategories } from '../actions/main.actions';
+import { addData, clearSVGoff, clearSVGon, decrement, increment, updateCategories, updatedd } from '../actions/main.actions';
 import { DataService } from '../services/data.service';
 
 
@@ -56,6 +56,16 @@ export class MainEffects {
       clearInterval(store.main.interval)
       console.log("action stop")
       console.log(action["data"])
+    }
+      )
+  ), { dispatch: false });
+
+  updatedd$ = createEffect(() =>
+  this.actions$.pipe(
+    ofType("[Data updateCrossVar1] update updateCrossVar1","[Data updateCrossVar2] update updateCrossVar2"),
+    withLatestFrom(this.store),
+    tap(([action,store]:any) => {
+      this.store.dispatch(updatedd({data:1}))
     }
       )
   ), { dispatch: false });

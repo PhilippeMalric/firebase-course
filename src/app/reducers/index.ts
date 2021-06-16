@@ -24,6 +24,10 @@ export interface  FileState {
   metaInfo: MetaInfo
 }
 
+export const selectupdatedd = (state: any) => state.updatedd;
+export const selectCrossVar = (state: any) => state.main.crossVar;
+export const selectCrossVar1 = (state: any) => state.crossVar["0"];
+export const selectCrossVar2 = (state: any) => state.crossVar["1"];
 export const selectVarName = (state: any) => state.main.varName;
 export const selectDataset = (state: any) => state.main.dataset;
 export const selectData = (state: any) => state.main.data;
