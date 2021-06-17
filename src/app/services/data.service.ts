@@ -23,7 +23,7 @@ categoriesD: {};
 dd$: BehaviorSubject<any[]>;
 variablesdd$: BehaviorSubject<any[]>;
 categoriesdd$: BehaviorSubject<any[]>;
-crossVarCompte$: BehaviorSubject<any[]>;
+crossVarCompte$: BehaviorSubject<any>;
 
   constructor(private db: AngularFirestore,private store:Store) { 
 
@@ -72,14 +72,53 @@ crossVarCompte$: BehaviorSubject<any[]>;
 
     }
     */
+    let varNamesD1 = []
+    let varNamesD2 = []
+    for (var i = 1; i < dataset.length; i++) {
+
+      varNamesD1[dataset[i][n1]] = 1
+      varNamesD2[dataset[i][n2]] = 1
+    }
+    let varNames1 = Object.keys(varNamesD1)
+    let varNames2 = Object.keys(varNamesD2)
+
     var counts = {};
     for (var i = 1; i < dataset.length; i++) {
-        counts[dataset[i][n1]+" - "+dataset[i][n2]] = 1 + (counts[dataset[i][n1]+" - "+dataset[i][n2]] || 0);
-    }
+      if(! (dataset[i][n1] in counts)){
+        counts[dataset[i][n1]] = {}
+        for(let e of varNames2){
+          counts[dataset[i][n1]][e] = 0
+        }
+      }
+      
+        counts[dataset[i][n1]][dataset[i][n2]] = 1 + (counts[dataset[i][n1]][dataset[i][n2]])
+      
+     }
 
-    let result = Object.keys(counts).sort().map((key)=>{
-      return {categorie:key,count:counts[key]}
-    })
+     const result = []
+
+     for (let i in Object.keys(counts)){
+       let e = Object.keys(counts)[i]
+       if(result.length == 0){
+        console.log("objet intermediaire")
+        console.log(counts)
+         console.log(Object.keys(counts))
+         result[0] = [vars["0"] ,...Object.keys(counts[e])]
+       }
+        for(let i2 in Object.keys(counts[e])){
+          let e2 = Object.keys(counts[e])[i2]
+          let index_var2 = Number(i)+1
+          if(!result[index_var2]){
+            result[index_var2] = []
+            result[index_var2][0] = e
+          }
+            result[index_var2].push(counts[e][e2])
+          
+        
+       
+       }
+       
+     }
 
 console.log("result")
 console.log(result)

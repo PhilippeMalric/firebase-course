@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
+
 import { withLatestFrom } from 'rxjs/operators';
 import { selectCrossVar } from 'src/app/reducers';
 import { DataService } from 'src/app/services/data.service';
+declare var google:any;
 
 @Component({
   selector: 'cross-var',
@@ -32,12 +34,7 @@ export class CrossVarComponent implements OnInit {
       setTimeout(() => {
         this.reset = true
         console.log(data)
-        this.rows = data.map((item)=>{
-
-          return [item.categorie,item.count]
-
-
-        })
+        this.rows = data
 
 
 
@@ -45,9 +42,9 @@ export class CrossVarComponent implements OnInit {
           let varNames = vars["0"]+" - "+vars["1"]
             console.log()
             this.chart = {
-              chartType: 'PieChart',
+              chartType: 'Bar',
               dataTable: this.rows,
-              firstRowIsData: true,
+              //firstRowIsData: true,
               options: {
                 is3D: true,
                 height: 800 ,
