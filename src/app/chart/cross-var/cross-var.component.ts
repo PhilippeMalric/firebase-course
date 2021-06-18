@@ -47,7 +47,7 @@ export class CrossVarComponent implements OnInit {
               //firstRowIsData: true,
               options: {
                 is3D: true,
-                height: 800 ,
+                height: 400 ,
                 width : 900,
                 'title': varNames},
             };

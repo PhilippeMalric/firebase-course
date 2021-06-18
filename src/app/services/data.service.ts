@@ -7,7 +7,7 @@ import { concatMap, map, withLatestFrom } from 'rxjs/operators';
 import { updateCategories } from '../actions/main.actions';
 import { Statistique } from '../model/statistique';
 import { Variable } from '../model/variable';
-import { selectCrossVar } from '../reducers';
+import { selectCrossVar, selectno_na } from '../reducers';
 import { convertSnaps } from './db-utils';
 
 @Injectable({
@@ -46,11 +46,11 @@ crossVarCompte$: BehaviorSubject<any>;
         })
         this.store.pipe(
           select(selectCrossVar),
-          withLatestFrom(this.dataset$)).subscribe(([data,dataset])=>{
+          withLatestFrom(this.dataset$,this.store.pipe(select(selectno_na)))).subscribe(([data,dataset,no_na])=>{
             if(data && 
               data["0"] != "" && data["1"] != "" && 
               dataset.length > 0){
-                this.crossVarCompte$.next(this.createCompte(data,dataset))
+                this.crossVarCompte$.next(this.createCompte(data,dataset,no_na))
               }
 
           
@@ -59,7 +59,7 @@ crossVarCompte$: BehaviorSubject<any>;
   }
 
 
-  createCompte(vars,dataset){
+  createCompte(vars,dataset,no_na){
 
     console.log(vars,dataset)
     console.log(vars["0"],vars["1"])
@@ -82,6 +82,10 @@ crossVarCompte$: BehaviorSubject<any>;
     let varNames1 = Object.keys(varNamesD1)
     let varNames2 = Object.keys(varNamesD2)
 
+if(varNames1.length + varNames2.length > 30){
+  return []
+}
+
     var counts = {};
     for (var i = 1; i < dataset.length; i++) {
       if(! (dataset[i][n1] in counts)){
@@ -93,6 +97,14 @@ crossVarCompte$: BehaviorSubject<any>;
       
         counts[dataset[i][n1]][dataset[i][n2]] = 1 + (counts[dataset[i][n1]][dataset[i][n2]])
       
+     }
+
+     if(no_na ){
+      delete counts["NA"]
+      Object.keys(counts).map((k)=>{
+        console.log(counts[k])
+        delete counts[k]["NA"]
+      })
      }
 
      const result = []

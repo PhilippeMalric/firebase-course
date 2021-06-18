@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { ChangeDetectorRef, Component, HostListener, Input, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { select, Store } from '@ngrx/store';
@@ -37,6 +37,9 @@ export class DdVarNameComponent implements OnInit {
     private dataService:DataService,
     private changeDetectorRefs: ChangeDetectorRef) { }
 
+
+
+  
   ngOnInit(){
     console.log("init ")
     this.dataSource1 = new MatTableDataSource<any>([]); 
@@ -73,8 +76,8 @@ export class DdVarNameComponent implements OnInit {
     console.log("data change")
     console.log(data)
     if(this.variables){
-    this.dataSource1.data = this.variables.filter((data2)=>data2.variable == data)
-    this.dataSource2.data = this.cat.filter((data2)=>data2.title == data)
+      this.dataSource1.data = this.variables.filter((data2)=>data2.variable == data)
+      this.dataSource2.data = this.cat.filter((data2)=>data2.title == data)
     }
   }
 

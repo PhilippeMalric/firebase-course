@@ -72,7 +72,7 @@ import { SelectVarsComponent } from './select-vars/select-vars.component';
 import { DdVarNameComponent } from './dd/dd-var-name/dd-var-name.component';
 import { CrossVarComponent } from './chart/cross-var/cross-var.component';
 
-
+import {MatExpansionModule} from '@angular/material/expansion';
 
 
 
@@ -136,6 +136,7 @@ import { CrossVarComponent } from './chart/cross-var/cross-var.component';
     ReactiveFormsModule,
     AppRoutingModule,
     HttpClientModule,
+    MatExpansionModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule,
     AngularFireStorageModule,
