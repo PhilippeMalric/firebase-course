@@ -99,7 +99,7 @@ if(varNames1.length + varNames2.length > 30){
       
      }
 
-     if(no_na ){
+     if(no_na){
       delete counts["NA"]
       Object.keys(counts).map((k)=>{
         console.log(counts[k])
