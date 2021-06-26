@@ -49,6 +49,10 @@ const routes: Routes = [
     component: LoginComponent
   },
   {
+    path: 'home',
+    component: HomeComponent
+  },
+  {
     path: 'courses/:courseUrl',
     component: CourseComponent,
     resolve: {

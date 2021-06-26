@@ -102,6 +102,10 @@ export const updatedd = createAction(
   '[Data updatedd] update updatedd',
   props<{ data:any }>()
 );
+export const updateCrossVarM = createAction(
+  '[Data updateCrossVarM] update updateCrossVarM',
+  props<{ data:any }>()
+);
 
 
 export const increment = createAction('[Counter Component] Increment');

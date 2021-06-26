@@ -42,7 +42,7 @@ export class CrossVarComponent implements OnInit {
           let varNames = vars["0"]+" - "+vars["1"]
             console.log()
             this.chart = {
-              chartType: 'Bar',
+              chartType: 'PieChart',
               dataTable: this.rows,
               //firstRowIsData: true,
               options: {

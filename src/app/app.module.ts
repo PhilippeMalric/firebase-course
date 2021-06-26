@@ -73,6 +73,7 @@ import { DdVarNameComponent } from './dd/dd-var-name/dd-var-name.component';
 import { CrossVarComponent } from './chart/cross-var/cross-var.component';
 
 import {MatExpansionModule} from '@angular/material/expansion';
+import { CrossVarMultiComponent } from './chart/cross-var-multi/cross-var-multi.component';
 
 
 
@@ -104,7 +105,8 @@ import {MatExpansionModule} from '@angular/material/expansion';
     TableauCroiseComponent,
     SelectVarsComponent,
     DdVarNameComponent,
-    CrossVarComponent
+    CrossVarComponent,
+    CrossVarMultiComponent
   ],
   imports: [
     MatCheckboxModule,

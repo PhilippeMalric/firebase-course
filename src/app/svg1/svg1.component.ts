@@ -302,9 +302,9 @@ export class Svg1Component implements OnInit {
         }).length != 0 
 
         if(allNum){
-          this.rows = data.filter((x)=>x.categorie != 'NA' && x.categorie != '').map((x)=>{
-            return [x.categorie,x.count]
-        })
+            this.rows = data.filter((x)=>x.categorie != 'NA' && x.categorie != '').map((x)=>{
+              return [x.categorie,x.count]
+          })
         }else{
           this.rows = data.filter((x)=>x.categorie != 'NA' && x.categorie != '').map((x)=>{
         

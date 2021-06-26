@@ -25,6 +25,8 @@ export interface  FileState {
 }
 
 export const selectupdatedd = (state: any) => state.updatedd;
+
+export const selectCrossVarM = (state: any) => state.main.crossVarM;
 export const selectCrossVar = (state: any) => state.main.crossVar;
 export const selectCrossVar1 = (state: any) => state.crossVar["0"];
 export const selectCrossVar2 = (state: any) => state.crossVar["1"];
