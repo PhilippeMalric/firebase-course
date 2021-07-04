@@ -8,6 +8,7 @@ import { updateCategories, updateCrossVarM } from '../actions/main.actions';
 import { Statistique } from '../model/statistique';
 import { Variable } from '../model/variable';
 import { selectCrossVar, selectno_na } from '../reducers';
+import { createCompte2 } from './data-utils';
 import { convertSnaps } from './db-utils';
 
 @Injectable({
@@ -24,7 +25,7 @@ dd$: BehaviorSubject<any[]>;
 variablesdd$: BehaviorSubject<any[]>;
 categoriesdd$: BehaviorSubject<any[]>;
 crossVarCompte$: BehaviorSubject<any>;
-  charts: any;
+charts: any;
 
   constructor(private db: AngularFirestore,private store:Store) { 
 
@@ -42,21 +43,22 @@ crossVarCompte$: BehaviorSubject<any>;
 
             if(clear){
                 this.categoriesD = {}
-      
             }
         })
+
         this.store.pipe(
           select(selectCrossVar),
-          withLatestFrom(this.dataset$,this.store.pipe(select(selectno_na)))).subscribe(([data,dataset,no_na])=>{
+          withLatestFrom(
+            this.dataset$,
+            this.store.pipe(select(selectno_na)))
+            ).subscribe(([data,dataset,no_na])=>{
             if(data && 
               data["0"] != "" && data["1"] != "" && 
               dataset.length > 0){
                 this.crossVarCompte$.next(this.createCompte(data,dataset,no_na))
-                this.createCompte2(data,dataset,no_na)
-                this.store.dispatch(updateCrossVarM({data:this.charts}))
+                let charts = createCompte2(data,dataset,no_na)
+                this.store.dispatch(updateCrossVarM({data:charts}))
               }
-
-          
         })
       
   }
@@ -218,13 +220,7 @@ console.log(counts)
         this.charts.push(d)
     
       }
-   
-        
-       
-       
-       
-     
-
+ 
   }
 
 

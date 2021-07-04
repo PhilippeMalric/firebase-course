@@ -48,7 +48,7 @@ export class LoadCSV_ddComponent implements OnInit {
 
     // Select the files from the event
     const files = $event.srcElement.files;
-    console.log('files', files);
+    //console.log('files', files);
     if(files.length > 0 ){
       this.store.dispatch(updateFileName_dd({data:files[0].name}))
       //this.store.dispatch(updateFileSize({data:formatBytes(files[0].size)}))
@@ -64,13 +64,13 @@ export class LoadCSV_ddComponent implements OnInit {
           var first_sheet_name = workbook.SheetNames[0];    
           var worksheet_var = workbook.Sheets[first_sheet_name]; 
           let variables = XLSX.utils.sheet_to_json(worksheet_var,{raw:true})
-          console.log("variables");
-          console.log(variables);
+          //console.log("variables");
+          //console.log(variables);
           this.dataService.variablesdd$.next(variables)
           var sec_sheet_name = workbook.SheetNames[1];    
           var worksheet_cat = workbook.Sheets[sec_sheet_name];  
           let categories = XLSX.utils.sheet_to_json(worksheet_cat,{raw:true})  
-          console.log(categories);   
+          //console.log(categories);   
           this.dataService.categoriesdd$.next(categories)
       }    
     }
