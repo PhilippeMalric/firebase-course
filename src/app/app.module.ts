@@ -72,6 +72,9 @@ import { CrossVarComponent } from './chart/cross-var/cross-var.component';
 
 import {MatExpansionModule} from '@angular/material/expansion';
 import { CrossVarMultiComponent } from './chart/cross-var-multi/cross-var-multi.component';
+import { DatasetComponent } from './dataset/dataset.component';
+import { DataSetCardListComponent } from './dataSet-card-list/dataSet-card-list.component';
+import { CreateDatasetComponent } from './create-dataset/create-dataset.component';
 
 
 
@@ -80,11 +83,14 @@ import { CrossVarMultiComponent } from './chart/cross-var-multi/cross-var-multi.
     AppComponent,
     HomeComponent,
     AboutComponent,
+    DatasetComponent,
+    DataSetCardListComponent,
     CourseComponent,
     CoursesCardListComponent,
     EditCourseDialogComponent,
     LoginComponent,
     CreateCourseComponent,
+    CreateDatasetComponent,
     CreateUserComponent,
     LoadCSVComponent,
     VarViewComponent,

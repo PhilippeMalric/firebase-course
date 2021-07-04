@@ -13,6 +13,9 @@ import { VarViewComponent } from './var-view/var-view.component';
 import { DataDivComponent } from './data-div/data-div.component';
 import { LoadCSV_mapComponent } from './load-csv_map/load-csv_map.component';
 import { TableauCroiseComponent } from './tableau-croise/tableau-croise.component';
+import { DatasetComponent } from './dataset/dataset.component';
+import { DatasetResolver } from './services/dataset.resolver';
+import { CreateDatasetComponent } from './create-dataset/create-dataset.component';
 
 const routes: Routes = [
   {
@@ -22,6 +25,11 @@ const routes: Routes = [
   {
     path: 'create-course',
     component: CreateCourseComponent
+
+  },
+  {
+    path: 'create-dataset',
+    component: CreateDatasetComponent
 
   },
   {
@@ -57,6 +65,13 @@ const routes: Routes = [
     component: CourseComponent,
     resolve: {
         course: CourseResolver
+    }
+  },
+  {
+    path: 'datasets/:datasetUrl',
+    component: DatasetComponent,
+    resolve: {
+      dataset: DatasetResolver
     }
   },
   {

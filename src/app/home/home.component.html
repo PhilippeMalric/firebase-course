@@ -35,5 +35,12 @@
 
     </mat-tab-group>
 
+    <button mat-mini-fab color="primary" routerLink="/create-dataset">
+        <mat-icon class="add-course-btn">add</mat-icon>
+    </button>
+    <datasets-card-list [datasets]="datasets$ | async"
+    (datasetEdited)="reloadDataSets()"
+    (datasetDeleted)="reloadDataSets()">
+    </datasets-card-list>
 </div>
 

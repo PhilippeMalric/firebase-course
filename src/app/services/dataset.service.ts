@@ -81,10 +81,10 @@ export class DatasetsService {
             )
     }
 
-    loadDataSetsByCategory(category:string): Observable<Dataset[]> {
+    loadDataSets(): Observable<Dataset[]> {
          return this.db.collection(
             "dataset",
-            ref => ref.where("categories", "array-contains", category)
+            ref => ref
                 .orderBy("seqNo")
             )
             .get()

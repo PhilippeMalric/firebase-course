@@ -5,6 +5,8 @@ import {catchError, map} from 'rxjs/operators';
 import {AngularFirestore} from '@angular/fire/firestore';
 import {Router} from '@angular/router';
 import {CoursesService} from "../services/courses.service";
+import { DatasetsService } from '../services/dataset.service';
+import { Dataset } from '../model/dataset';
 
 
 @Component({
@@ -18,9 +20,13 @@ export class HomeComponent implements OnInit {
 
     advancedCourses$: Observable<Course[]>;
 
+    datasets$: Observable<Dataset[]>;
+
+
     constructor(
       private router: Router,
-      private coursesService: CoursesService) {
+      private coursesService: CoursesService,
+      private dataSetsService: DatasetsService) {
 
     }
 
@@ -36,6 +42,11 @@ export class HomeComponent implements OnInit {
 
         this.advancedCourses$ = this.coursesService.loadCoursesByCategory("ADVANCED");
 
+    }
+
+    reloadDataSets() {
+
+       this.datasets$ = this.dataSetsService.loadDataSets()
     }
 
 }
