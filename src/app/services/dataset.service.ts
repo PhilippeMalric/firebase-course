@@ -16,7 +16,7 @@ export class DatasetsService {
 
     }
 
-    findDatasetByUrl(datasetUrl: string): Observable<Course | null> {
+    findDatasetByUrl(datasetUrl: string): Observable<Dataset | null> {
         return this.db.collection("dataset",
             ref => ref.where("url", "==", datasetUrl))
             .get()
@@ -37,7 +37,7 @@ export class DatasetsService {
         return from(this.db.doc(`dataset/${datasetId}`).delete());
     }
 
-    updateDataset(datasetId:string, changes: Partial<Course>):Observable<any> {
+    updateDataset(datasetId:string, changes: Partial<Dataset>):Observable<any> {
         return from(this.db.doc(`dataset/${datasetId}`).update(changes));
     }
 
@@ -81,9 +81,9 @@ export class DatasetsService {
             )
     }
 
-    loadDataSetsByCategory(category:string): Observable<Course[]> {
+    loadDataSetsByCategory(category:string): Observable<Dataset[]> {
          return this.db.collection(
-            "courses",
+            "dataset",
             ref => ref.where("categories", "array-contains", category)
                 .orderBy("seqNo")
             )
