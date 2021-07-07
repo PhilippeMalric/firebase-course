@@ -6,21 +6,45 @@ import { addData, clearSVGoff, clearSVGon, decrement, increment, stopInterval, u
 
 export const mainFeatureKey = 'main';
 
+
+
+export interface VariableName {
+  variable:string;
+  texte_fr:string;
+
+}
+
+export interface CategorieName {
+  title:string;
+  texte_fr:string;
+  code:string;
+
+}
+
+export interface DatasetState {
+categorieName:CategorieName;
+variableName:VariableName;
+}
+
+
+
+
 export interface MainState {
   data: string;
   no_na:boolean;
-  clearState:boolean,
-  categories:any,
-  fileState:FileState,
-  interval:Number,
-  dataSet:any[],
-  fileName_map:string,
-  fileName_dd:string,
-  focusVar:string,
-  varName:string,
-  crossVar:any,
-  crossVarM:any,
-  updatedd:Number
+  clearState:boolean;
+  categories:any;
+  fileState:FileState;
+  interval:Number;
+  dataSet:any[];
+  fileName_map:string;
+  fileName_dd:string;
+  focusVar:string;
+  varName:string;
+  crossVar:any;
+  crossVarM:any;
+  updatedd:Number;
+  datasetState:DatasetState;
 }
 
 
@@ -46,7 +70,18 @@ export const initialState: MainState = {
   varName:"",
   crossVar:{"0":"","1":""},
   crossVarM:[],
-  updatedd:0
+  updatedd:0,
+  datasetState:{
+    categorieName:{
+      title:"",
+      texte_fr:"",
+      code:""
+    },
+    variableName:{
+      variable:"",
+      texte_fr:""
+    }
+  }
 };
 
 

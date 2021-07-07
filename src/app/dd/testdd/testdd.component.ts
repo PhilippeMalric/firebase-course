@@ -12,7 +12,7 @@ import { DataService } from 'src/app/services/data.service';
 })
 export class TestddComponent implements OnInit {
 
-  displayedColumns1 = ["variable","texte"];
+  displayedColumns1 = ["variable","texte_fr","texte_en"];
   displayedColumns2 = ["variable","code","texte"];
 
 

@@ -1,12 +1,28 @@
-<div style="margin-left: auto;margin-right: auto;width: fit-content;">
-  <label for="txtFileUpload">Select a file for data:</label>
-  <input 
-  type="file" #csvReader 
-  name="Upload CSV" 
-  id="txtFileUpload" 
-  (change)="uploadListener($event)" accept=".csv" 
-  /> 
-</div>
+<mat-card  class="mat-elevation-z10 m-3">
+
+  <mat-card-header>
+
+    <mat-card-title>Upload dataset</mat-card-title>
+
+  </mat-card-header>
+
+  <mat-card-content>
+    <p>test</p>
+  </mat-card-content>
+
+  <mat-card-actions class="upload-actions">
+    <div>
+      <label for="txtFileUpload">Select a file for data:</label>
+      <input 
+      type="file" #csvReader 
+      name="Upload CSV" 
+      id="txtFileUpload" 
+      (change)="uploadListener($event)" accept=".csv" 
+      /> 
+    </div>
+  </mat-card-actions>
+</mat-card>
+
 
 <!---
 <button mat-raised-button (click)='uploadVar()'>add</button>

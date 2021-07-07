@@ -1,12 +1,8 @@
-import { Variable } from '@angular/compiler/src/render3/r3_ast';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormControl } from '@angular/forms';
 import { select, Store } from '@ngrx/store';
-import { NgxCsvParser, NgxCSVParserError } from 'ngx-csv-parser';
 import { Observable } from 'rxjs';
-import { map, startWith, tap, timeInterval } from 'rxjs/operators';
-import { addData, updateData, updateFileMeta, updateFileName, updateFileName_dd, updateFileName_map, updateFileSize, updateInterval } from '../actions/main.actions';
-import { selectFileName, selectFileName_dd } from '../reducers';
+import { updateFileName_dd } from '../actions/main.actions';
+import { selectFileName_dd } from '../reducers';
 import { DataService } from '../services/data.service';
 import * as XLSX from "xlsx"
 
@@ -30,7 +26,6 @@ export class LoadCSV_ddComponent implements OnInit {
 
 
   constructor(
-    private ngxCsvParser: NgxCsvParser,
     private dataService:DataService,
     private store:Store) {
   }
@@ -70,7 +65,7 @@ export class LoadCSV_ddComponent implements OnInit {
           var sec_sheet_name = workbook.SheetNames[1];    
           var worksheet_cat = workbook.Sheets[sec_sheet_name];  
           let categories = XLSX.utils.sheet_to_json(worksheet_cat,{raw:true})  
-          //console.log(categories);   
+          console.log(categories);   
           this.dataService.categoriesdd$.next(categories)
       }    
     }
