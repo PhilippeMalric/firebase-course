@@ -6,27 +6,13 @@
 
     <mat-form-field appearance="outline">
 
-      <input placeholder="Course title" matInput formControlName="description">
+      <input placeholder="DataSet title" matInput formControlName="description">
 
     </mat-form-field>
 
-    <div class="course-image-upload">
+ 
 
-      <span>Course thumbnail:</span>
-
-      <img class="course-thumbnail mat-elevation-z3">
-
-    </div>
-
-    <mat-form-field appearance="outline">
-
-      <mat-select placeholder="Select category" formControlName="category">
-        <mat-option value="BEGINNER">Beginner</mat-option>
-        <mat-option value="INTERMEDIATE">Intermediate</mat-option>
-        <mat-option value="ADVANCED">Advanced</mat-option>
-      </mat-select>
-
-    </mat-form-field>
+    <load-csv></load-csv>
 
     <mat-form-field appearance="outline">
 
@@ -54,7 +40,7 @@
 
     <button mat-raised-button color="warn" [disabled]="!form.valid"
         (click)="onCreateCourse()">
-      Create Course
+      Create DataSet
     </button>
 
   </form>

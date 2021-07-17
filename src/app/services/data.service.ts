@@ -4,7 +4,7 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { select, Store } from '@ngrx/store';
 import { BehaviorSubject, from, Observable } from 'rxjs';
 import { concatMap, map, withLatestFrom } from 'rxjs/operators';
-import { updateCategories, updateCrossVarM } from '../actions/main.actions';
+import { updateCrossVarM } from '../actions/main.actions';
 import { Statistique } from '../model/statistique';
 import { Variable } from '../model/variable';
 import { selectCrossVar, selectno_na } from '../reducers';
@@ -26,6 +26,7 @@ variablesdd$: BehaviorSubject<any[]>;
 categoriesdd$: BehaviorSubject<any[]>;
 crossVarCompte$: BehaviorSubject<any>;
 charts: any;
+nAtable$: BehaviorSubject<any[]>;
 
   constructor(private db: AngularFirestore,private store:Store) { 
 
@@ -37,6 +38,7 @@ charts: any;
     this.datasetSVG$ = new BehaviorSubject<any[]>([])
     this.categoriesdd$ = new BehaviorSubject<any[]>([])
     this.variablesdd$ = new BehaviorSubject<any[]>([])
+    this.nAtable$ = new BehaviorSubject<any[]>([])
 
         this.store.subscribe((state:any)=>{
             let clear = state.main.clearState
@@ -45,7 +47,7 @@ charts: any;
                 this.categoriesD = {}
             }
         })
-
+        // update chart
         this.store.pipe(
           select(selectCrossVar),
           withLatestFrom(
@@ -68,15 +70,16 @@ charts: any;
 
     console.log(vars,dataset)
     console.log(vars["0"],vars["1"])
+    //prend l'index de chaque variable 
     let n1 = dataset[0].indexOf(vars["0"])
     let n2 = dataset[0].indexOf(vars["1"])
-    console.log(n1,n2)
-    /*
-    if(arr[1].split(" ")[0].split("-").length > 2 ){
-      arr = arr.map(x=>x.split(" ")[0])
+    //console.log(n1,n2)
+ 
 
-    }
-    */
+
+    //Si les variables ont trop de categories 
+    //le graphique ne sera pas beau
+
     let varNamesD1 = []
     let varNamesD2 = []
     for (var i = 1; i < dataset.length; i++) {
@@ -84,12 +87,16 @@ charts: any;
       varNamesD1[dataset[i][n1]] = 1
       varNamesD2[dataset[i][n2]] = 1
     }
+
     let varNames1 = Object.keys(varNamesD1)
     let varNames2 = Object.keys(varNamesD2)
 
-if(varNames1.length + varNames2.length > 30){
-  return []
-}
+    if(varNames1.length + varNames2.length > 30){
+      return []
+    }
+
+
+    // le compte commence ici
 
     var counts = {};
     for (var i = 1; i < dataset.length; i++) {
@@ -99,11 +106,11 @@ if(varNames1.length + varNames2.length > 30){
           counts[dataset[i][n1]][e] = 0
         }
       }
-      
         counts[dataset[i][n1]][dataset[i][n2]] = 1 + (counts[dataset[i][n1]][dataset[i][n2]])
-      
      }
 
+
+     //Pour enlever les NA
      if(no_na){
       delete counts["NA"]
       Object.keys(counts).map((k)=>{
@@ -112,6 +119,8 @@ if(varNames1.length + varNames2.length > 30){
       })
      }
 
+
+     //On construit un objet
      const result = []
 
      for (let i in Object.keys(counts)){
@@ -158,15 +167,14 @@ console.log(result)
 
     console.log(vars,dataset)
     console.log(vars["0"],vars["1"])
+
+    //Obtention des index
+
     let n1 = dataset[0].indexOf(vars["0"])
     let n2 = dataset[0].indexOf(vars["1"])
     console.log(n1,n2)
-    /*
-    if(arr[1].split(" ")[0].split("-").length > 2 ){
-      arr = arr.map(x=>x.split(" ")[0])
-
-    }
-    */
+ 
+    //Pour calculer la règle de création du graphique
     let varNamesD1 = []
     let varNamesD2 = []
     for (var i = 1; i < dataset.length; i++) {
@@ -204,10 +212,13 @@ console.log(result)
 
      const result = []
 
-console.log("counts")
-console.log(counts)
+      console.log("counts")
+      console.log(counts)
+
+      //Création d'un ensemble de googleCharts
+
      for (let k of Object.keys(counts)){
-       let e = counts[k]
+      let e = counts[k]
       console.log(e)
 
       let d:any = {}

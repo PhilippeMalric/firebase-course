@@ -1,11 +1,8 @@
-import { Variable } from '@angular/compiler/src/render3/r3_ast';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormControl } from '@angular/forms';
 import { select, Store } from '@ngrx/store';
 import { NgxCsvParser, NgxCSVParserError } from 'ngx-csv-parser';
 import { Observable } from 'rxjs';
-import { map, startWith, tap, timeInterval } from 'rxjs/operators';
-import { addData, updateData, updateFileMeta, updateFileName, updateFileSize, updateInterval } from '../actions/main.actions';
+import {  updateFileMeta, updateFileName, updateFileSize } from '../actions/main.actions';
 import { selectFileName } from '../reducers';
 import { DataService } from '../services/data.service';
 
@@ -23,6 +20,9 @@ export class LoadCSVComponent implements OnInit {
   interval:any
   fileName:Observable<String>
   options: any;
+  varNames: any;
+  nbEntree: any;
+  myData: any;
 
 
   constructor(
@@ -54,17 +54,28 @@ export class LoadCSVComponent implements OnInit {
     this.ngxCsvParser.parse(files[0], { header: this.header, delimiter: ',' })
       .pipe().subscribe((result: Array<any>) => {
 
-        //console.log('Result', result);
+        //console.log('---------------Result', result);
 
-        this.options = result[0]
+        this.varNames = result[0]
 
-        let meta = {
-          nrow:result.length,
-          ncol:this.options.length,
-          varName:this.options
-        }
-        this.store.dispatch(updateFileMeta({data:meta}))
-      
+        this.nbEntree = this.varNames.length
+
+        this.myData = this.varNames.map((e,i)=>{
+          
+          let nbNA = result.slice(1,this.nbEntree).filter((row)=>{
+
+           return (row[i] == "" || row[i] == "NA")
+
+          }).length
+          //console.log(nbNA)
+          return {pcNA: (nbNA / this.nbEntree),name:e}
+
+        })
+
+        console.log("---------------myData")
+        console.log(this.myData)
+        this.dataService.nAtable$.next(this.myData)
+        
         this.dataService.dataset$.next(result)
       }, (error: NgxCSVParserError) => {
         console.log('Error', error);

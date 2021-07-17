@@ -8,6 +8,8 @@ import {Router} from '@angular/router';
 import firebase from 'firebase/app';
 import Timestamp = firebase.firestore.Timestamp;
 import {CoursesService} from "../services/courses.service";
+import { select, Store } from '@ngrx/store';
+import { selectFileState } from '../reducers';
 
 @Component({
   selector: 'create-dataset',
@@ -30,7 +32,15 @@ export class CreateDatasetComponent implements OnInit {
   constructor(private fb:FormBuilder,
               private coursesService:CoursesService,
               private afs: AngularFirestore,
-              private router: Router) {
+              private router: Router,
+              private store:Store) {
+
+                this.store.pipe(select(selectFileState)).subscribe((data)=>{
+                    console.log(data)
+                    this.form.patchValue({description:data.fileName})
+                }
+                    
+                )
 
   }
 

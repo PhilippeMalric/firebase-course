@@ -75,11 +75,13 @@ import { CrossVarMultiComponent } from './chart/cross-var-multi/cross-var-multi.
 import { DatasetComponent } from './dataset/dataset.component';
 import { DataSetCardListComponent } from './dataSet-card-list/dataSet-card-list.component';
 import { CreateDatasetComponent } from './create-dataset/create-dataset.component';
+import { Svg2Component } from './svg2/svg2.component';
 
 
 
 @NgModule({
   declarations: [
+    Svg2Component,
     AppComponent,
     HomeComponent,
     AboutComponent,

@@ -3,10 +3,8 @@ import { Component, Input, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 
 import * as d3 from 'd3';
-import { map } from 'd3';
 import { Subscription } from 'rxjs';
-import { selectCategories, selectVarName } from '../reducers';
-import { MainState } from '../reducers/main.reducer';
+import {  selectFocusVar, selectVarName } from '../reducers';
 import { DataService } from '../services/data.service';
 import Chart from 'chart.js/auto';
 import { generate } from 'patternomaly';
@@ -15,11 +13,11 @@ import { take, withLatestFrom } from 'rxjs/operators';
 
 
 @Component({
-  selector: 'svg1',
-  templateUrl: './svg1.component.html',
-  styleUrls: ['./svg1.component.css']
+  selector: 'svg2',
+  templateUrl: './svg2.component.html',
+  styleUrls: ['./svg2.component.css']
 })
-export class Svg1Component implements OnInit {
+export class Svg2Component implements OnInit {
   
   @Input() varName: String;
   @Input() data2: any;
@@ -35,7 +33,6 @@ export class Svg1Component implements OnInit {
   ]);
 
   
-  private borderColor = this.backgroundC
 
 
   sub1: Subscription;
@@ -50,6 +47,9 @@ export class Svg1Component implements OnInit {
   calendar: GoogleChartInterface;
   jsChart: boolean=false;
   reset: boolean;
+  allData: any[];
+  sliceInd: number;
+  div: d3.Selection<d3.BaseType, unknown, HTMLElement, any>;
  
 
  
@@ -64,13 +64,14 @@ export class Svg1Component implements OnInit {
   ngOnInit(): void {
 
     this.ctx = 'myChart'; 
-    this.createSvg()
-    this.dataService.categories$
+
+    
+    
+    this.store.pipe(select(selectFocusVar),withLatestFrom(this.dataService.dataset$))
     .subscribe((data:any)=>{
-      console.log("svg")
+      console.log("--------------------------------svg")
       console.log(data)
-      this.createGraph(data)
-      
+      //this.createSvg(data)
       //this.ref.markForCheck()
     })
   
@@ -85,109 +86,49 @@ export class Svg1Component implements OnInit {
     })
   }
 
-  ngAfterViewInit() {
+  next = ()=>{
     
+    this.sliceInd = ( this.sliceInd +1 ) % Math.floor( this.allData.length / 10)
+    console.log(this.sliceInd )
+    let sliceEnd = ((this.sliceInd +1)*10 > this.allData.length)?this.allData.length:(this.sliceInd +1)*10
+    this.createSvg(this.allData.slice(this.sliceInd*10,sliceEnd))
+       
   }
-
-
-
-  createGraph(data: any) {
-
-    this.reset = false
-
-    if(data.length > 0 ){
-      
-     
-      let data_count = data.map(x=>x.count)
-      console.log(data_count)
-      let data2 = {
-        labels: data.map(x=>x.categorie),
-        datasets: [{
-          label: "",
-          data: data_count,
-          backgroundColor: this.backgroundC.slice(0,data.length),
-          borderColor: this.borderColor.slice(0,data.length),
-          borderWidth: 1
-        }]
-      };
-
-      if(this.myChart){
-        this.myChart.destroy();
-      }
-
-      if(data.length < 20){
-        this.jsChart = true
-        setTimeout(() => {
-          
-          this.myChart = new Chart(this.ctx,
-            {
-              type: 'bar',
-              data: data2,
-              options: {
-                indexAxis:"y",
-                scales: {
-                  y: {
-                    beginAtZero: true
-                  }
-                }
-              },
-            })
-        }, 100);
-        setTimeout(() => {
-          this.createPieChart(data)},200)
-
-      }
-      else{
-        console.log("data[1].categorie")
-        console.log(data[1].categorie)
-        this.jsChart = false
-        if(data[1].categorie.split(" ")[0].split("-").length > 2 ){
-          this.jsChart = false
-          this.store.pipe(select(selectVarName),take(1)).subscribe((varName)=>{
-
-            setTimeout(() => {
-              this.reset = true
-              let years = {}
-  
-              this.rows = data.filter((x)=>x.categorie != 'NA' && x.categorie != '').map((x)=>{
-              
-              let date = x.categorie.split(" ")[0].split("-")
-              years[date[0]]=1
-              return[new Date(date[0],Number(date[1])-1,date[2]),x.count]})
+  prev = ()=>{
     
-            let numberOfYear = Object.keys(years).length
-    
-    
-              this.calendar = {
-                chartType: 'Calendar',
-                dataTable: this.rows,
-                firstRowIsData: true,
-                options: {
-                  height: 200 * numberOfYear ,
-                  width : 1200,
-                  'title': varName },
-              };
-           
-    
-            }, 100);
-
-          })
-          
-          
-      }else{
-        setTimeout(() => {
-          this.createPieChart(data)},100)
-      }
-        
-
-      
-        
-      this.drawBars(data)
+    if(this.sliceInd == 0){
+      this.sliceInd = Math.floor( this.allData.length / 10)
+    }else{
+      this.sliceInd = ( this.sliceInd -1 ) % Math.floor( this.allData.length / 10)
     }
+    let sliceEnd = ((this.sliceInd +1)*10 > this.allData.length)?this.allData.length:(this.sliceInd +1)*10 
+
+    this.createSvg(this.allData.slice(this.sliceInd*10,sliceEnd))
+      
+
   }
-}
 
 
+  ngAfterViewInit() {
+    setTimeout(() => {
+      this.dataService.nAtable$.subscribe((data)=>{
+          
+        this.allData = data
+
+        this.sliceInd = 0
+
+        let sliceEnd = ((this.sliceInd +1)*10 > this.allData.length)?this.allData.length:(this.sliceInd +1)*10 
+        this.div = d3.select("figure#variables")
+        this.createSvg(this.allData.slice(0,sliceEnd))
+        
+      }
+        )
+    }, 4000);
+    
+
+  
+    
+  }
 
 
   ngOnDestroy(){
@@ -197,14 +138,42 @@ export class Svg1Component implements OnInit {
   
 
   
-  private createSvg(): void {
+  private createSvg(data:any): void {
     
-    this.svg = d3.select("figure#bar")
-    .append("svg")
+
+    console.log("-------------dataPASsion")
+    console.log(data)
+
+    this.div.selectAll(".svg").remove()
+   
+    this.svg = this.div
+    .append("svg").attr("class","svg")
     .attr("width", this.width + (this.margin * 2))
     .attr("height", this.h2 + (this.margin * 2))
     .append("g")
     .attr("transform", "translate(" + this.margin + "," + this.margin + ")");
+
+
+    let group = this.svg.selectAll(".item")
+      .data(data)
+      .enter()
+      .append("g")
+      .attr("class","cir")
+      .attr("transform",(d,i)=>{return  "translate(" + 10 + "," + (i * 50) + ")"});
+    
+    group.append('circle')
+    .attr('cx', 10)
+    .attr('cy', 0)
+    .attr('r', d=>((1-d.pcNA) *25)+5)
+    .attr('stroke', 'black')
+    .attr('fill', '#9ca3b2');
+
+    group.append('text')
+    .attr('x', 70)
+    .attr('y', 0)
+    .attr('stroke', 'black')
+    .style("font-size", 18)
+    .text(d=>d.name)
 
     //console.log("svg" )
     //console.log(this.svg )

@@ -35,14 +35,14 @@ export class StatDivComponent implements OnInit {
 
     this.dataService.dataset$.subscribe((data)=>{
 
-  if(data && data.length > 0){
-    this.options = data[0]
-    this.filteredOptions = this.myControl.valueChanges.pipe(
-          
-    startWith(''),
-    map(value => this._filter(value))
-  );
-  }
+    if(data && data.length > 0){
+      this.options = data[0]
+      this.filteredOptions = this.myControl.valueChanges.pipe(
+            
+      startWith(''),
+      map(value => this._filter(value))
+    );
+    }
     
 })
 

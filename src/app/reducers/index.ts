@@ -42,6 +42,8 @@ export const selectno_na = (state: any) => state.main.no_na;
 
 
 export const selectFileState = (state: any) => state.main.fileState;
+
+
 export const selectFileName = createSelector(
   selectFileState,
   (state: FileState) => state.fileName
