@@ -75,7 +75,7 @@ export class LoadCSVComponent implements OnInit {
         console.log("---------------myData")
         console.log(this.myData)
         this.dataService.nAtable$.next(this.myData)
-        
+        this.csvRecords = result
         this.dataService.dataset$.next(result)
       }, (error: NgxCSVParserError) => {
         console.log('Error', error);
@@ -91,14 +91,14 @@ export class LoadCSVComponent implements OnInit {
 
     let newD =[]
 
-    let name = this.csvRecords[0][9]
+    let name = this.csvRecords[0][10]
 
     let a = this.csvRecords.filter((d,i)=>{
         return i != 0;
       })
     let b =  a.map(function(v,i2){
 
-      newD[i2] = v[9]
+      newD[i2] = v[10]
 
     })
 

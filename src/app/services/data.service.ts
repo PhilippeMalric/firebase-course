@@ -311,6 +311,7 @@ console.log(result)
                     save$ = from(this.db.doc(`variables/${courseId}`).set(v2));
                 }
                 else {
+                  console.log("noid!!!!!!!")
                     save$ = from(this.db.collection("variables").add(v2));
                 }
 

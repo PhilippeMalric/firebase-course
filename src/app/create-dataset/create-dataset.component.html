@@ -3,6 +3,7 @@
   <h3>Create New Course</h3>
 
   <form [formGroup]="form">
+    <load-csv></load-csv>
 
     <mat-form-field appearance="outline">
 
@@ -11,15 +12,13 @@
     </mat-form-field>
 
  
-
-    <load-csv></load-csv>
-
     <mat-form-field appearance="outline">
 
-      <input placeholder="Course url" matInput formControlName="url">
+      <input placeholder="Dataset url" matInput formControlName="url">
 
     </mat-form-field>
 
+    <!--
     <mat-form-field appearance="outline">
 
       <textarea matInput placeholder="Course description"
@@ -37,7 +36,7 @@
       <mat-datepicker-toggle matSuffix [for]="promoStartPicker"></mat-datepicker-toggle>
       <mat-datepicker #promoStartPicker></mat-datepicker>
     </mat-form-field>
-
+-->
     <button mat-raised-button color="warn" [disabled]="!form.valid"
         (click)="onCreateCourse()">
       Create DataSet

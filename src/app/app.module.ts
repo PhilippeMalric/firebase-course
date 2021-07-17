@@ -76,6 +76,7 @@ import { DatasetComponent } from './dataset/dataset.component';
 import { DataSetCardListComponent } from './dataSet-card-list/dataSet-card-list.component';
 import { CreateDatasetComponent } from './create-dataset/create-dataset.component';
 import { Svg2Component } from './svg2/svg2.component';
+import { EditDsDialogComponent } from './edit-ds-dialog/edit-ds-dialog.component';
 
 
 
@@ -112,7 +113,8 @@ import { Svg2Component } from './svg2/svg2.component';
     SelectVarsComponent,
     DdVarNameComponent,
     CrossVarComponent,
-    CrossVarMultiComponent
+    CrossVarMultiComponent,
+    EditDsDialogComponent
   ],
   imports: [
     MatCheckboxModule,

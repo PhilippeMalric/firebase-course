@@ -6,6 +6,7 @@ import {throwError} from 'rxjs';
 import {Router} from '@angular/router';
 import { Dataset } from '../model/dataset';
 import { DatasetsService } from '../services/dataset.service';
+import { EditDsDialogComponent } from '../edit-ds-dialog/edit-ds-dialog.component';
 
 @Component({
     selector: 'datasets-card-list',
@@ -30,7 +31,10 @@ export class DataSetCardListComponent implements OnInit {
     }
 
     ngOnInit() {
-
+        setTimeout(() => {
+            
+console.log("datasets",this.datasets)
+        }, 3000);
     }
 
     editDataSet(dataset:Dataset) {
@@ -43,7 +47,7 @@ export class DataSetCardListComponent implements OnInit {
 
         dialogConfig.data = dataset;
 
-        this.dialog.open(EditCourseDialogComponent, dialogConfig)
+        this.dialog.open(EditDsDialogComponent, dialogConfig)
             .afterClosed()
             .subscribe(val => {
                 if (val) {
@@ -58,12 +62,12 @@ export class DataSetCardListComponent implements OnInit {
         this.datasetsService.deleteDataset(dataset.id)
             .pipe(
                 tap(() => {
-                    console.log("Deleted course", dataset);
+                    console.log("Deleted ds", dataset);
                     this.datasetDeleted.emit(dataset);
                 }),
                 catchError(err => {
                     console.log(err);
-                    alert("Could not delete course.");
+                    alert("Could not delete ds.");
                     return throwError(err);
                 })
             )

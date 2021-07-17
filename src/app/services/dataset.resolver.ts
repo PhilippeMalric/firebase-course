@@ -15,7 +15,7 @@ export class DatasetResolver implements Resolve<Dataset>{
     resolve(route: ActivatedRouteSnapshot,
             state: RouterStateSnapshot): Observable<Dataset> {
 
-        const datasetUrl = route.paramMap.get("courseUrl");
+        const datasetUrl = route.paramMap.get("datasetUrl");
 
         return this.datasetService.findDatasetByUrl(datasetUrl);
     }

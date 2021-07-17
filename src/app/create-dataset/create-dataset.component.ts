@@ -1,7 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AngularFirestore} from '@angular/fire/firestore';
-import {Course} from '../model/course';
 import {catchError, concatMap, last, map, take, tap} from 'rxjs/operators';
 import {from, Observable, throwError} from 'rxjs';
 import {Router} from '@angular/router';
@@ -10,6 +9,8 @@ import Timestamp = firebase.firestore.Timestamp;
 import {CoursesService} from "../services/courses.service";
 import { select, Store } from '@ngrx/store';
 import { selectFileState } from '../reducers';
+import { Dataset } from '../model/dataset';
+import { DatasetsService } from '../services/dataset.service';
 
 @Component({
   selector: 'create-dataset',
@@ -22,9 +23,9 @@ export class CreateDatasetComponent implements OnInit {
 
   form = this.fb.group({
      description:  ['', Validators.required],
-      category: ["BEGINNER", Validators.required],
+      category: ["BEGINNER"],
       url: ['', Validators.required],
-      longDescription: ['', Validators.required],
+      longDescription: [''],
       promo: [false],
       promoStartAt: [null]
   });
@@ -33,7 +34,8 @@ export class CreateDatasetComponent implements OnInit {
               private coursesService:CoursesService,
               private afs: AngularFirestore,
               private router: Router,
-              private store:Store) {
+              private store:Store,
+              private datasetsService:DatasetsService) {
 
                 this.store.pipe(select(selectFileState)).subscribe((data)=>{
                     console.log(data)
@@ -52,7 +54,7 @@ export class CreateDatasetComponent implements OnInit {
 
         const val = this.form.value;
 
-        const newCourse: Partial<Course> = {
+        const newCourse: Partial<Dataset> = {
             description:  val.description,
             url: val.url,
             longDescription: val.longDescription,
@@ -60,13 +62,29 @@ export class CreateDatasetComponent implements OnInit {
             categories: [val.category]
         };
 
-      newCourse.promoStartAt = Timestamp.fromDate(this.form.value.promoStartAt);
+        let today = new Date();
+        let dd:any = today.getDate();
+        
+        let mm:any = today.getMonth()+1; 
+        let yyyy = today.getFullYear();
+        if(dd<10) 
+        {
+            dd ='0'+dd;
+        } 
+        
+        if(mm<10) 
+        {
+            mm='0'+mm;
+        } 
 
-      this.coursesService.createCourse(newCourse, this.courseId)
+      console.log(yyyy+"-"+mm+"-"+dd)
+      newCourse.promoStartAt = Timestamp.fromDate(new Date());
+
+      this.datasetsService.createDataset(newCourse, this.courseId)
           .pipe(
               tap(course => {
                   console.log("Created new course: ", course);
-                  this.router.navigateByUrl("/courses");
+                  this.router.navigateByUrl("/datasets/"+newCourse.url);
               }),
               catchError(err => {
                   console.log(err);

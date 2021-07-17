@@ -1,8 +1,8 @@
 import {Injectable} from "@angular/core";
 import {AngularFirestore} from "@angular/fire/firestore";
-import {from, Observable, of} from "rxjs";
+import {from, Observable, of, pipe} from "rxjs";
 import {Course} from "../model/course";
-import {concatMap, map} from "rxjs/operators";
+import {concatMap, map, tap} from "rxjs/operators";
 import {convertSnaps} from "./db-utils";
 import { Dataset } from "../model/dataset";
 
@@ -17,7 +17,7 @@ export class DatasetsService {
     }
 
     findDatasetByUrl(datasetUrl: string): Observable<Dataset | null> {
-        return this.db.collection("dataset",
+        return this.db.collection("ds",
             ref => ref.where("url", "==", datasetUrl))
             .get()
             .pipe(
@@ -34,20 +34,20 @@ export class DatasetsService {
     
 
     deleteDataset(datasetId:string) {
-        return from(this.db.doc(`dataset/${datasetId}`).delete());
+        return from(this.db.doc(`ds/${datasetId}`).delete());
     }
 
     updateDataset(datasetId:string, changes: Partial<Dataset>):Observable<any> {
-        return from(this.db.doc(`dataset/${datasetId}`).update(changes));
+        return from(this.db.doc(`ds/${datasetId}`).update(changes));
     }
 
     createDataset(newDataset: Partial<Dataset>, datasetId?:string) {
-        return this.db.collection("dataset",
+        return this.db.collection("ds",
                 ref => ref.orderBy("seqNo", "desc").limit(1))
             .get()
             .pipe(
                 concatMap(result => {
-
+console.log("result",result)
                     const datasets = convertSnaps<Dataset>(result);
 
                     const lastDatasetSeqNo = datasets[0]?.seqNo ?? 0;
@@ -56,18 +56,24 @@ export class DatasetsService {
                         ...newDataset,
                         seqNo: lastDatasetSeqNo + 1
                     }
-
+                    console.log("dataset",dataset)
                     let save$: Observable<any>;
 
+console.log("datasetId",datasetId)
+this.findDatasetByUrl("test").subscribe(console.log)
+//this.db.collection("courses").add(dataset)
+//this.db.doc(`dataset/${datasetId}`).set(dataset)
+
                     if (datasetId) {
-                        save$ = from(this.db.doc(`dataset/${datasetId}`).set(dataset));
+                        save$ = from(this.db.doc(`ds/${datasetId}`).set(dataset));
                     }
                     else {
-                        save$ = from(this.db.collection("dataset").add(dataset));
+                        save$ = from(this.db.collection("ds").add(dataset));
                     }
 
                     return save$
                         .pipe(
+                            tap(console.log),
                             map(res => {
                                 return {
                                     id: datasetId ?? res.id,
@@ -83,12 +89,10 @@ export class DatasetsService {
 
     loadDataSets(): Observable<Dataset[]> {
          return this.db.collection(
-            "dataset",
-            ref => ref
-                .orderBy("seqNo")
-            )
+            "ds")
             .get()
              .pipe(
+                 tap((data)=>console.log("loadds",data)),
                  map(result => convertSnaps<Dataset>(result))
              );
 

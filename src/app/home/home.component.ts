@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {Course} from '../model/course';
 import {Observable, of} from 'rxjs';
-import {catchError, map} from 'rxjs/operators';
+import {catchError, map, tap} from 'rxjs/operators';
 import {AngularFirestore} from '@angular/fire/firestore';
 import {Router} from '@angular/router';
 import {CoursesService} from "../services/courses.service";
@@ -33,12 +33,12 @@ export class HomeComponent implements OnInit {
     ngOnInit() {
 
         this.reloadCourses();
-
+        this.reloadDataSets();
     }
 
     reloadCourses() {
 
-        this.beginnersCourses$ = this.coursesService.loadCoursesByCategory("BEGINNER");
+        this.beginnersCourses$ = this.coursesService.loadCoursesByCategory("BEGINNER").pipe(tap(console.log));
 
         this.advancedCourses$ = this.coursesService.loadCoursesByCategory("ADVANCED");
 
@@ -46,7 +46,7 @@ export class HomeComponent implements OnInit {
 
     reloadDataSets() {
 
-       this.datasets$ = this.dataSetsService.loadDataSets()
+       this.datasets$ = this.dataSetsService.loadDataSets();
     }
 
 }
