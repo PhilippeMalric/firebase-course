@@ -1,4 +1,5 @@
 import firebase from 'firebase/app';
+import { Variable } from './variable';
 import Timestamp = firebase.firestore.Timestamp;
 
 export interface Dataset {
@@ -9,8 +10,9 @@ export interface Dataset {
   iconUrl: string;
   seqNo:number;
   categories: string[];
-  lessonsCount: number;
-  promo:boolean;
-  promoStartAt: Timestamp;
+  variablesCount: number;
+  rowsCount:number;
+  startAt: Timestamp;
+  variable:Variable[];
 }
 

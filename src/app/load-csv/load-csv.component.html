@@ -7,13 +7,14 @@
   </mat-card-header>
 
   <mat-card-content>
-    <p>test</p>
+    <p>Veuillez choisir un fichier.</p>
   </mat-card-content>
 
   <mat-card-actions class="upload-actions">
     <div>
-      <label for="txtFileUpload">Select a file for data:</label>
+      <label for="txtFileUpload" style="width:100%;">Select a file for data:</label>
       <input 
+      style="width:100%;"
       type="file" #csvReader 
       name="Upload CSV" 
       id="txtFileUpload" 
@@ -22,9 +23,9 @@
     </div>
   </mat-card-actions>
 </mat-card>
-
-
-
+<stat-div *ngIf="(fileName|async) != ''"></stat-div>
+<testdd *ngIf="dd_present"></testdd>
+<svg1></svg1>
 <button mat-raised-button (click)='uploadVar()'>add</button>
 
 

@@ -42,14 +42,15 @@ export class DatasetsService {
     }
 
     createDataset(newDataset: Partial<Dataset>, datasetId?:string) {
+        console.log("createDataset")
         return this.db.collection("ds",
                 ref => ref.orderBy("seqNo", "desc").limit(1))
             .get()
             .pipe(
                 concatMap(result => {
-console.log("result",result)
+                    
                     const datasets = convertSnaps<Dataset>(result);
-
+                    console.log("dataset",datasets)
                     const lastDatasetSeqNo = datasets[0]?.seqNo ?? 0;
 
                     const dataset = {
@@ -60,10 +61,10 @@ console.log("result",result)
                     let save$: Observable<any>;
 
 console.log("datasetId",datasetId)
-this.findDatasetByUrl("test").subscribe(console.log)
+//this.findDatasetByUrl("test").subscribe(console.log)
 //this.db.collection("courses").add(dataset)
 //this.db.doc(`dataset/${datasetId}`).set(dataset)
-
+//this.db.collection("ds").add({test:0})
                     if (datasetId) {
                         save$ = from(this.db.doc(`ds/${datasetId}`).set(dataset));
                     }

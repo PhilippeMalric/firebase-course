@@ -6,5 +6,6 @@ export interface Variable {
   data: string[];
   type:string;
   seqNo:number;
+  fromWhichDataset:string;
 }
 

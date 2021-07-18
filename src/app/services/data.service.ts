@@ -1,14 +1,16 @@
 
+import { variable } from '@angular/compiler/src/output/output_ast';
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { select, Store } from '@ngrx/store';
 import { BehaviorSubject, from, Observable } from 'rxjs';
-import { concatMap, map, withLatestFrom } from 'rxjs/operators';
+import { concatMap, map, tap, withLatestFrom } from 'rxjs/operators';
 import { updateCrossVarM } from '../actions/main.actions';
 import { Statistique } from '../model/statistique';
 import { Variable } from '../model/variable';
 import { selectCrossVar, selectno_na } from '../reducers';
 import { createCompte2 } from './data-utils';
+import { DatasetsService } from './dataset.service';
 import { convertSnaps } from './db-utils';
 
 @Injectable({
@@ -28,13 +30,50 @@ crossVarCompte$: BehaviorSubject<any>;
 charts: any;
 nAtable$: BehaviorSubject<any[]>;
 
-  constructor(private db: AngularFirestore,private store:Store) { 
+  constructor(private db: AngularFirestore,private store:Store,private datasetsService:DatasetsService) { 
 
     this.mainVar$ = new BehaviorSubject<String>("**premier**")
     this.crossVarCompte$ = new BehaviorSubject<Statistique[]>([])
     this.categories$ = new BehaviorSubject<Statistique[]>([])
     this.categoriesD = {}
     this.dataset$ = new BehaviorSubject<any[]>([])
+
+    this.dataset$.subscribe((data)=>{
+
+      console.log("createMetaData")
+
+
+      let dataset = {
+
+        description: "",
+        url:"",
+        longDescription: "",
+        iconUrl: "",
+        seqNo:0,
+        categories: [],
+        variablesCount: 0,
+        rowsCount:0,
+        variable: []
+
+
+      }
+
+
+
+
+    if(data.length > 0){
+      this.datasetsService.createDataset(dataset).subscribe()
+
+    }
+ 
+
+
+
+
+
+    })
+
+
     this.datasetSVG$ = new BehaviorSubject<any[]>([])
     this.categoriesdd$ = new BehaviorSubject<any[]>([])
     this.variablesdd$ = new BehaviorSubject<any[]>([])

@@ -31,10 +31,7 @@ export class DataSetCardListComponent implements OnInit {
     }
 
     ngOnInit() {
-        setTimeout(() => {
-            
-console.log("datasets",this.datasets)
-        }, 3000);
+        console.log("datasets",this.datasets)
     }
 
     editDataSet(dataset:Dataset) {

@@ -32,7 +32,7 @@ export class EditDsDialogComponent {
         this.form = this.fb.group({
             description: [dataset.description, Validators.required],
             longDescription: [dataset.longDescription, Validators.required],
-            promo: [dataset.promo]
+            rowsCount: [dataset.rowsCount]
         });
 
     }

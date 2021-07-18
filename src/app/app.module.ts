@@ -40,7 +40,7 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import {CreateUserComponent} from './create-user/create-user.component';
 import {HttpClientModule} from '@angular/common/http';
 import {MatNativeDateModule} from '@angular/material/core';
-import { LoadCSVComponent } from './load-csv/load-csv.component';
+import { Dialogdd, LoadCSVComponent } from './load-csv/load-csv.component';
 import { NgxCsvParserModule } from 'ngx-csv-parser';
 import { VarViewComponent } from './var-view/var-view.component';
 import { VarTestComponent } from './var-test/var-test.component';
@@ -79,7 +79,6 @@ import { Svg2Component } from './svg2/svg2.component';
 import { EditDsDialogComponent } from './edit-ds-dialog/edit-ds-dialog.component';
 
 
-
 @NgModule({
   declarations: [
     Svg2Component,
@@ -114,7 +113,8 @@ import { EditDsDialogComponent } from './edit-ds-dialog/edit-ds-dialog.component
     DdVarNameComponent,
     CrossVarComponent,
     CrossVarMultiComponent,
-    EditDsDialogComponent
+    EditDsDialogComponent,
+    Dialogdd
   ],
   imports: [
     MatCheckboxModule,
@@ -157,6 +157,7 @@ import { EditDsDialogComponent } from './edit-ds-dialog/edit-ds-dialog.component
     Ng2GoogleChartsModule,
     !environment.production ? StoreDevtoolsModule.instrument() : []
   ],
+  entryComponents: [Dialogdd,LoadCSV_ddComponent],
   providers: [
       D3Service,
       { provide: USE_AUTH_EMULATOR, useValue: environment.useEmulators ? ['localhost', 9099] : undefined },

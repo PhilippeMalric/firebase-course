@@ -1,8 +1,10 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, Inject, OnInit, ViewChild } from '@angular/core';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { select, Store } from '@ngrx/store';
 import { NgxCsvParser, NgxCSVParserError } from 'ngx-csv-parser';
 import { Observable } from 'rxjs';
 import {  updateFileMeta, updateFileName, updateFileSize } from '../actions/main.actions';
+import { LoadCSV_ddComponent } from '../load-csv_dd/load-csv_dd.component';
 import { selectFileName } from '../reducers';
 import { DataService } from '../services/data.service';
 
@@ -23,19 +25,22 @@ export class LoadCSVComponent implements OnInit {
   varNames: any;
   nbEntree: any;
   myData: any;
+  dd_present = false
 
 
   constructor(
+    public dialog: MatDialog,
     private ngxCsvParser: NgxCsvParser,
     private dataService:DataService,
     private store:Store) {
+
+      this.fileName = this.store.pipe(select(selectFileName))
   }
 
   @ViewChild('csvReader', { static: false }) fileImportInput: any;
 
   ngOnInit(){
     
-    this.fileName = this.store.pipe(select(selectFileName))
   }
   
 
@@ -55,6 +60,16 @@ export class LoadCSVComponent implements OnInit {
       .pipe().subscribe((result: Array<any>) => {
 
         //console.log('---------------Result', result);
+
+        
+        const dialogRef = this.dialog.open(Dialogdd,{
+          width: '600px',
+          data: { component: LoadCSV_ddComponent}});
+            
+        dialogRef.afterClosed().subscribe(result => {
+          this.dd_present = result
+          console.log(`Dialog result: ${result}`);
+        });
 
         this.varNames = result[0]
 
@@ -124,3 +139,20 @@ function formatBytes(bytes, decimals = 2) {
   
 
 
+@Component({
+  selector: 'dialog-content',
+  templateUrl: 'popup_dd.html',
+})
+export class Dialogdd {
+  fileName$: Observable<string>;
+  constructor(
+    public dialogRef: MatDialogRef<Dialogdd>,
+    @Inject(MAT_DIALOG_DATA) public data: any) {
+
+      
+     }
+
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
+}

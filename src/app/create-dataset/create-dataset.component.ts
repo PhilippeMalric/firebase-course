@@ -58,7 +58,7 @@ export class CreateDatasetComponent implements OnInit {
             description:  val.description,
             url: val.url,
             longDescription: val.longDescription,
-            promo: val.promo,
+            rowsCount: val.rowsCount,
             categories: [val.category]
         };
 
@@ -78,7 +78,7 @@ export class CreateDatasetComponent implements OnInit {
         } 
 
       console.log(yyyy+"-"+mm+"-"+dd)
-      newCourse.promoStartAt = Timestamp.fromDate(new Date());
+      newCourse.startAt = Timestamp.fromDate(new Date());
 
       this.datasetsService.createDataset(newCourse, this.courseId)
           .pipe(
