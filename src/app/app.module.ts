@@ -77,6 +77,8 @@ import { DataSetCardListComponent } from './dataSet-card-list/dataSet-card-list.
 import { CreateDatasetComponent } from './create-dataset/create-dataset.component';
 import { Svg2Component } from './svg2/svg2.component';
 import { EditDsDialogComponent } from './edit-ds-dialog/edit-ds-dialog.component';
+import { DataViewTestComponent, DialogTest } from './data-view-test/data-view-test.component';
+import { Graph1Component } from './chart/graph1/graph1.component';
 
 
 @NgModule({
@@ -114,7 +116,10 @@ import { EditDsDialogComponent } from './edit-ds-dialog/edit-ds-dialog.component
     CrossVarComponent,
     CrossVarMultiComponent,
     EditDsDialogComponent,
-    Dialogdd
+    Dialogdd,
+    DataViewTestComponent,
+    Graph1Component,
+    DialogTest
   ],
   imports: [
     MatCheckboxModule,
@@ -157,7 +162,6 @@ import { EditDsDialogComponent } from './edit-ds-dialog/edit-ds-dialog.component
     Ng2GoogleChartsModule,
     !environment.production ? StoreDevtoolsModule.instrument() : []
   ],
-  entryComponents: [Dialogdd,LoadCSV_ddComponent],
   providers: [
       D3Service,
       { provide: USE_AUTH_EMULATOR, useValue: environment.useEmulators ? ['localhost', 9099] : undefined },
