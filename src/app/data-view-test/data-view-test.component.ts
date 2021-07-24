@@ -1,7 +1,10 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { Graph1Component } from '../chart/graph1/graph1.component';
+import { selectFileName } from '../reducers';
+import { DataService } from '../services/data.service';
 
 @Component({
   selector: 'data-view-test',
@@ -9,10 +12,22 @@ import { Graph1Component } from '../chart/graph1/graph1.component';
   styleUrls: ['./data-view-test.component.css']
 })
 export class DataViewTestComponent implements OnInit {
+  data$: any;
+  variablesdd$: any;
+  categoriesdd$: any;
+  fileName$: Observable<string>;
 
   constructor(
+    private dataService:DataService,
     public dialog: MatDialog,
-  ) { }
+    private store:Store
+  ) { 
+
+    this.fileName$ = this.store.pipe(select(selectFileName))
+      this.data$ = this.dataService.dataset$
+      this.variablesdd$ = this.dataService.variablesdd$
+      this.categoriesdd$ = this.dataService.categoriesdd$
+  }
 
   ngOnInit(): void {
   }

@@ -5,7 +5,7 @@ import { NgxCsvParser, NgxCSVParserError } from 'ngx-csv-parser';
 import { Observable } from 'rxjs';
 import {  updateFileMeta, updateFileName, updateFileSize } from '../actions/main.actions';
 import { LoadCSV_ddComponent } from '../load-csv_dd/load-csv_dd.component';
-import { selectFileName } from '../reducers';
+import { selectFileName, selectFileName_dd } from '../reducers';
 import { DataService } from '../services/data.service';
 
 @Component({
@@ -26,14 +26,15 @@ export class LoadCSVComponent implements OnInit {
   nbEntree: any;
   myData: any;
   dd_present = false
-
+  ouvert_dataset = true
+  fileName_dd: Observable<any>;
 
   constructor(
     public dialog: MatDialog,
     private ngxCsvParser: NgxCsvParser,
     private dataService:DataService,
     private store:Store) {
-
+      this.fileName_dd = this.store.pipe(select(selectFileName_dd))
       this.fileName = this.store.pipe(select(selectFileName))
   }
 
@@ -67,8 +68,7 @@ export class LoadCSVComponent implements OnInit {
           data: { component: LoadCSV_ddComponent}});
             
         dialogRef.afterClosed().subscribe(result => {
-          this.dd_present = result
-          console.log(`Dialog result: ${result}`);
+          this.ouvert_dataset = false
         });
 
         this.varNames = result[0]
@@ -146,9 +146,16 @@ function formatBytes(bytes, decimals = 2) {
 export class Dialogdd {
   fileName$: Observable<string>;
   constructor(
+    private store:Store,
     public dialogRef: MatDialogRef<Dialogdd>,
     @Inject(MAT_DIALOG_DATA) public data: any) {
+      this.store.pipe(select(selectFileName_dd)).subscribe((data)=>{
+        if(data != ''){
 
+          this.dialogRef.close()
+        }
+
+      })
       
      }
 

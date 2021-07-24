@@ -20,7 +20,7 @@ import { CreateDatasetComponent } from './create-dataset/create-dataset.componen
 const routes: Routes = [
   {
     path: '',
-    component: DataDivComponent
+    component: HomeComponent
   },
   {
     path: 'create-course',

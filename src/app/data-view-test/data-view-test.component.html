@@ -1,1 +1,1 @@
-<button mat-button (click)="click()">Open graph</button>
+<button mat-button *ngIf="(fileName$|async)!=''" (click)="click()">Open graph</button>

@@ -6,7 +6,6 @@ import {from, Observable, throwError} from 'rxjs';
 import {Router} from '@angular/router';
 import firebase from 'firebase/app';
 import Timestamp = firebase.firestore.Timestamp;
-import {CoursesService} from "../services/courses.service";
 import { select, Store } from '@ngrx/store';
 import { selectFileState } from '../reducers';
 import { Dataset } from '../model/dataset';
@@ -19,7 +18,7 @@ import { DatasetsService } from '../services/dataset.service';
 })
 export class CreateDatasetComponent implements OnInit {
 
-  courseId:string;
+  datasetId:string;
 
   form = this.fb.group({
      description:  ['', Validators.required],
@@ -31,7 +30,6 @@ export class CreateDatasetComponent implements OnInit {
   });
 
   constructor(private fb:FormBuilder,
-              private coursesService:CoursesService,
               private afs: AngularFirestore,
               private router: Router,
               private store:Store,
@@ -47,14 +45,14 @@ export class CreateDatasetComponent implements OnInit {
   }
 
   ngOnInit() {
-      this.courseId = this.afs.createId();
+      this.datasetId = this.afs.createId();
   }
 
-    onCreateCourse() {
+    onCreateDataset() {
 
         const val = this.form.value;
 
-        const newCourse: Partial<Dataset> = {
+        const newDataset: Partial<Dataset> = {
             description:  val.description,
             url: val.url,
             longDescription: val.longDescription,
@@ -78,17 +76,17 @@ export class CreateDatasetComponent implements OnInit {
         } 
 
       console.log(yyyy+"-"+mm+"-"+dd)
-      newCourse.startAt = Timestamp.fromDate(new Date());
+      newDataset.startAt = Timestamp.fromDate(new Date());
 
-      this.datasetsService.createDataset(newCourse, this.courseId)
+      this.datasetsService.createDataset(newDataset, this.datasetId)
           .pipe(
-              tap(course => {
-                  console.log("Created new course: ", course);
-                  this.router.navigateByUrl("/datasets/"+newCourse.url);
+              tap(dataset => {
+                  console.log("Created new dataset: ", dataset);
+                  this.router.navigateByUrl("/datasets/"+newDataset.url);
               }),
               catchError(err => {
                   console.log(err);
-                  alert("Could not create the course.");
+                  alert("Could not create the dataset.");
                   return throwError(err);
               })
           )
