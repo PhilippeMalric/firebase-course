@@ -79,6 +79,7 @@ import { Svg2Component } from './svg2/svg2.component';
 import { EditDsDialogComponent } from './edit-ds-dialog/edit-ds-dialog.component';
 import { DataViewTestComponent, DialogTest } from './data-view-test/data-view-test.component';
 import { Graph1Component } from './chart/graph1/graph1.component';
+import { Graph2Component } from './chart/graph2/graph2.component';
 
 
 @NgModule({
@@ -119,6 +120,7 @@ import { Graph1Component } from './chart/graph1/graph1.component';
     Dialogdd,
     DataViewTestComponent,
     Graph1Component,
+    Graph2Component,
     DialogTest
   ],
   imports: [
