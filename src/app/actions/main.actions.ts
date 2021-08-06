@@ -107,6 +107,15 @@ export const updateCrossVarM = createAction(
   props<{ data:any }>()
 );
 
+export const updateddVarName = createAction(
+  '[Data updateddVarName] update updateddVarName',
+  props<{ data:any }>()
+);
+export const updateddVarDesc = createAction(
+  '[Data updateddVarDesc] update updateddVarDesc',
+  props<{ data:any }>()
+);
+
 
 export const increment = createAction('[Counter Component] Increment');
 export const decrement = createAction('[Counter Component] Decrement');

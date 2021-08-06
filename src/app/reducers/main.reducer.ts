@@ -1,7 +1,7 @@
 import { Action, createReducer, on } from '@ngrx/store';
 import { FileState } from '.';
 
-import { addData, clearSVGoff, clearSVGon, decrement, increment, stopInterval, updateCategories, updateCrossVar, updateCrossVar1, updateCrossVar2, updateCrossVarM, updateData, updatedd, updateFileMeta, updateFileName, updateFileName_dd, updateFileName_map, updateFileSize, updateFocusVar, updateInterval, updateNo_na, updateVarName } from '../actions/main.actions';
+import { addData, clearSVGoff, clearSVGon, decrement, increment, stopInterval, updateCategories, updateCrossVar, updateCrossVar1, updateCrossVar2, updateCrossVarM, updateData, updatedd, updateddVarDesc, updateddVarName, updateFileMeta, updateFileName, updateFileName_dd, updateFileName_map, updateFileSize, updateFocusVar, updateInterval, updateNo_na, updateVarName } from '../actions/main.actions';
 
 
 export const mainFeatureKey = 'main';
@@ -45,6 +45,8 @@ export interface MainState {
   crossVarM:any;
   updatedd:Number;
   datasetState:DatasetState;
+  ddVarName:string;
+  ddVarDesc:string;
 }
 
 
@@ -81,7 +83,9 @@ export const initialState: MainState = {
       variable:"",
       texte_fr:""
     }
-  }
+  },
+  ddVarName:"",
+  ddVarDesc:""
 };
 
 
@@ -185,6 +189,16 @@ on(updateCrossVarM, (state, { data }) => {
   console.log("updateCrossVarM")
   console.log(data)
   return { ...state,crossVarM:data}
+}),
+on(updateddVarName, (state, { data }) => {
+  console.log("updateCrossVarM")
+  console.log(data)
+  return { ...state,ddVarName:data}
+}),
+on(updateddVarDesc, (state, { data }) => {
+  console.log("updateCrossVarM")
+  console.log(data)
+  return { ...state,ddVarDesc:data}
 })
 
 

@@ -2,7 +2,8 @@ import { ChangeDetectorRef, Component, OnInit, QueryList, ViewChild, ViewChildre
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { select, Store } from '@ngrx/store';
-import { selectFocusVar } from 'src/app/reducers';
+import { take, withLatestFrom } from 'rxjs/operators';
+import { selectddVarDesc, selectddVarName, selectFocusVar } from 'src/app/reducers';
 import { DataService } from 'src/app/services/data.service';
 
 @Component({
@@ -43,6 +44,9 @@ export class TestddComponent implements OnInit {
 
       console.log("data focus var")
       console.log(data)
+
+
+      
 if(this.variables){
   this.dataSource1.data = this.variables.filter((data2)=>data2.variable == data)
   this.dataSource2.data = this.cat.filter((data2)=>data2.title == data)
@@ -50,22 +54,39 @@ if(this.variables){
       
     })
 
-    this.dataService.variablesdd$.subscribe((data)=>{
-console.log(data)
-      this.variables = data
-      this.dataSource1.data = data
-      this.resultsLength1 = data.length
+    this.dataService.variablesdd$.pipe(withLatestFrom(
+      this.store.pipe(select(selectddVarName),take(1)),
+      this.store.pipe(select(selectddVarDesc),take(1)))).subscribe((data)=>{
+      console.log("variable")
+      console.log(data)
+      let name = data[1]
+      let desc = data[2]
+      this.variables = data[0].map((x,i)=>{
+        x.texte_fr = data[0][i][desc]
+        x.variable = data[0][i][name]
+        return(x)
+
+      })
+      this.dataSource1.data = this.variables
+      this.resultsLength1 = this.variables.length
       
       //this.changeDetectorRefs.markForCheck()
       
 
     })
     
-    this.dataService.categoriesdd$.subscribe((data)=>{
+    this.dataService.categoriesdd$.pipe(withLatestFrom(
+      this.store.pipe(select(selectddVarName),take(1)),
+      this.store.pipe(select(selectddVarDesc),take(1)))).subscribe((data)=>{
       console.log(data)
-      this.cat = data
-      this.dataSource2.data = data
-      this.resultsLength2 = data.length
+      let name = data[1]
+      let desc = data[2]
+      console.log(data[0])
+
+
+      this.cat = data[0]
+      this.dataSource2.data = data[0]
+      this.resultsLength2 = data[0].length
       //
       //this.changeDetectorRefs.markForCheck()
 

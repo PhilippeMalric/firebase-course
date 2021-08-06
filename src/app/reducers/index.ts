@@ -26,6 +26,8 @@ export interface  FileState {
 
 export const selectupdatedd = (state: any) => state.updatedd;
 
+export const selectddVarDesc = (state: any) => state.main.ddVarDesc;
+export const selectddVarName = (state: any) => state.main.ddVarName;
 export const selectCrossVarM = (state: any) => state.main.crossVarM;
 export const selectCrossVar = (state: any) => state.main.crossVar;
 export const selectCrossVar1 = (state: any) => state.crossVar["0"];

@@ -60,7 +60,7 @@ export class LoadCSVComponent implements OnInit {
     this.ngxCsvParser.parse(files[0], { header: this.header, delimiter: ',' })
       .pipe().subscribe((result: Array<any>) => {
 
-        //console.log('---------------Result', result);
+        console.log('---------------Result', result);
 
         
         const dialogRef = this.dialog.open(Dialogdd,{

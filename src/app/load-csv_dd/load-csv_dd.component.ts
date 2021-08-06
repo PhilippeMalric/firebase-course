@@ -1,10 +1,11 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { updateFileName_dd } from '../actions/main.actions';
+import { updateddVarDesc, updateddVarName, updateFileName_dd } from '../actions/main.actions';
 import { selectFileName_dd } from '../reducers';
 import { DataService } from '../services/data.service';
 import * as XLSX from "xlsx"
+import { FormBuilder, Validators } from '@angular/forms';
 
 
 @Component({
@@ -23,12 +24,35 @@ export class LoadCSV_ddComponent implements OnInit {
   options: any;
   arrayBuffer: any;
   filelist: any[];
+  form: any;
 
+  
 
   constructor(
+    private fb: FormBuilder,
     private dataService:DataService,
     private store:Store) {
+
+      this.form = this.fb.group({
+        description: ["", Validators.required],
+        varName: ["", Validators.required]
+    });
+
+    this.form.get("description").valueChanges.subscribe(x => {
+      console.log('description')
+      console.log(x)
+    this.store.dispatch(updateddVarDesc({data:x}))
+   })
+
+   this.form.get("varName").valueChanges.subscribe(x => {
+    console.log('varName')
+    console.log(x)
+    this.store.dispatch(updateddVarName({data:x}))
+ })
+
   }
+
+
 
   @ViewChild('csvReader', { static: false }) fileImportInput: any;
 
@@ -59,6 +83,7 @@ export class LoadCSV_ddComponent implements OnInit {
           var first_sheet_name = workbook.SheetNames[0];    
           var worksheet_var = workbook.Sheets[first_sheet_name]; 
           let variables = XLSX.utils.sheet_to_json(worksheet_var,{raw:true})
+
           //console.log("variables");
           //console.log(variables);
           this.dataService.variablesdd$.next(variables)

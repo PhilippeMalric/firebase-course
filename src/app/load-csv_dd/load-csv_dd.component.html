@@ -8,10 +8,29 @@
 
   <mat-card-content>
     <p>Veuillez choisir le fichier.</p>
+
+<mat-dialog-content [formGroup]="form">
+
+  <mat-form-field>
+
+      <input matInput
+              placeholder="" formControlName="varName">
+
+  </mat-form-field>
+
+
+  <mat-form-field>
+
+    <input matInput
+    placeholder="" formControlName="description" >
+
+  </mat-form-field>
+
+</mat-dialog-content>
   </mat-card-content>
 
   <mat-card-actions class="upload-actions">
-    <div >
+    <div *ngIf="form.valid">
       <label for="txtFileUpload">Select a file for dd:</label>
       <input 
       type="file" #csvReader 
