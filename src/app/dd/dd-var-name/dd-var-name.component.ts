@@ -42,12 +42,15 @@ export class DdVarNameComponent implements OnInit {
   
   ngOnInit(){
     console.log("init ")
+    
     this.dataSource1 = new MatTableDataSource<any>([]); 
     this.dataSource2 = new MatTableDataSource<any>([]); 
+    
     this.sub1 = this.store.pipe(select(selectCrossVar)).subscribe(data=>{
-      console.log(data)
+      console.log("selectCrossVar",data)
       if(this.varIndex){
         if(data){
+          console.log("varIndex",this.varIndex)
           this.varName = data[this.varIndex]
           
           console.log(this.varName)
@@ -57,7 +60,26 @@ export class DdVarNameComponent implements OnInit {
       }
 
     })
- 
+    this.dataService.variablesdd$.subscribe((data)=>{
+      //console.log(data)
+      this.variables = data
+      this.dataSource1.data = data
+      this.resultsLength1 = data.length
+      
+      //this.changeDetectorRefs.markForCheck()
+      
+
+    })
+    
+    this.dataService.categoriesdd$.subscribe((data)=>{
+      //console.log(data)
+      this.cat = data
+      this.dataSource2.data = data
+      this.resultsLength2 = data.length
+      //
+      //this.changeDetectorRefs.markForCheck()
+
+    })
 
   }
 
@@ -95,26 +117,7 @@ export class DdVarNameComponent implements OnInit {
     this.dataSource2.paginator = this.paginators.get(1);
 
 
-    this.dataService.variablesdd$.subscribe((data)=>{
-      //console.log(data)
-      this.variables = data
-      this.dataSource1.data = data
-      this.resultsLength1 = data.length
-      
-      //this.changeDetectorRefs.markForCheck()
-      
 
-    })
-    
-    this.dataService.categoriesdd$.subscribe((data)=>{
-      //console.log(data)
-      this.cat = data
-      this.dataSource2.data = data
-      this.resultsLength2 = data.length
-      //
-      //this.changeDetectorRefs.markForCheck()
-
-    })
 
 
   }

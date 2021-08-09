@@ -14,8 +14,8 @@ import { DataService } from '../services/data.service';
   styleUrls: ['./select-vars.component.css']
 })
 export class SelectVarsComponent implements OnInit {
-  myControl1 = new FormControl();
-  myControl2 = new FormControl();
+  myControl1
+  myControl2
   options1: string[] = [];
   options2: string[] = [];
   filteredOptions1: Observable<string[]>;
@@ -43,7 +43,8 @@ export class SelectVarsComponent implements OnInit {
     private dataService:DataService,
     private store:Store
   ) { 
-
+    this.myControl1 = new FormControl();
+    this.myControl2 = new FormControl();
 
   }
 
@@ -53,8 +54,7 @@ export class SelectVarsComponent implements OnInit {
     this.fileName$ = this.store.pipe(select(selectFileName))
 
     this.dataService.dataset$.subscribe((data)=>{
-
-        console.log(data)
+      console.log("from select vars",data)
 
       this.options1 = data[0]
       if(data && data.length > 0){
@@ -62,8 +62,11 @@ export class SelectVarsComponent implements OnInit {
         this.options1 = data[0]
         this.options2 = data[0]
         this.filteredOptions1 = this.myControl1.valueChanges.pipe(
+          tap((data)=>{
+            console.log("myControl1",data)
+          }),
           startWith(''),
-          map((data)=>{
+          map((data:any)=>{
             console.log(data)
             //this.currentIndex = data.toLowerCase().indexOf(this.options1)
             this.store.dispatch(updateCrossVar1({data}))
@@ -71,6 +74,9 @@ export class SelectVarsComponent implements OnInit {
           })
         );
         this.filteredOptions2 = this.myControl2.valueChanges.pipe(
+          tap((data)=>{
+            console.log("myControl2",data)
+          }),
             startWith(''),
             map((data:any)=>{
               console.log("data--------------------------")
@@ -90,13 +96,10 @@ export class SelectVarsComponent implements OnInit {
       
     
     })
+    
 
-    this.filteredOptions1 = this.myControl1.valueChanges.pipe(
-      map((data)=>this._filter1(data))
-    );
-    this.filteredOptions2 = this.myControl2.valueChanges.pipe(
-        map((data)=>this._filter2(data))
-      );
+
+      
  
   }
 

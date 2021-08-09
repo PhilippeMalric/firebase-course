@@ -4,6 +4,7 @@ import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { Graph1Component } from '../chart/graph1/graph1.component';
 import { Graph2Component } from '../chart/graph2/graph2.component';
+import { Graph3Component } from '../chart/graph3/graph3.component';
 import { selectFileName } from '../reducers';
 import { DataService } from '../services/data.service';
 
@@ -47,6 +48,17 @@ click2 = ()=>{
   const dialogRef = this.dialog.open(DialogTest,{
     width: '1500px',
     data: { component: Graph2Component}});
+      
+  dialogRef.afterClosed().subscribe(result => {
+    //this.dd_present = result
+    console.log(`Dialog result: ${result}`);
+  });
+}
+
+click3 = ()=>{
+  const dialogRef = this.dialog.open(DialogTest,{
+    width: '1500px',
+    data: { component: Graph3Component}});
       
   dialogRef.afterClosed().subscribe(result => {
     //this.dd_present = result

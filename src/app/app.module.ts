@@ -80,6 +80,7 @@ import { EditDsDialogComponent } from './edit-ds-dialog/edit-ds-dialog.component
 import { DataViewTestComponent, DialogTest } from './data-view-test/data-view-test.component';
 import { Graph1Component } from './chart/graph1/graph1.component';
 import { Graph2Component } from './chart/graph2/graph2.component';
+import { Graph3Component } from './chart/graph3/graph3.component';
 
 
 @NgModule({
@@ -121,6 +122,7 @@ import { Graph2Component } from './chart/graph2/graph2.component';
     DataViewTestComponent,
     Graph1Component,
     Graph2Component,
+    Graph3Component,
     DialogTest
   ],
   imports: [
