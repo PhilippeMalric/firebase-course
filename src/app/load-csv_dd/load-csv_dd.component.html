@@ -1,46 +1,85 @@
-<mat-card  class="mat-elevation-z10 m-3">
 
-  <mat-card-header>
+    <div [formGroup]="form">
+      <mat-card  class="mat-elevation-z10 m-3">
 
-    <mat-card-title>Upload Data dictionnary</mat-card-title>
+    
+        <mat-card-header>
+      
+          <mat-card-title>Variables</mat-card-title>
+      
+        </mat-card-header>
+      
+        <mat-card-content>
+          <div class="container">
+            
+            <mat-form-field class="element1">
+              <label for="html">Colonne VarName</label><br>
+              <input matInput id="html"
+                      placeholder="" formControlName="varName">
+          
+          </mat-form-field>
+          
+          
+          <mat-form-field class="element1">
+            <label for="description">Colonne Description</label><br>
+            <input matInput id="description"
+            placeholder="" formControlName="description" >
+          
+          </mat-form-field>
+          </div>
+      </mat-card-content>
+      </mat-card>
 
-  </mat-card-header>
+      <div class="container">
+          <mat-card  class="mat-elevation-z10 m-3">
 
-  <mat-card-content>
-    <p>Veuillez choisir le fichier.</p>
+    
+            <mat-card-header>
+          
+              <mat-card-title>Catégorie</mat-card-title>
+          
+            </mat-card-header>
+          
+            <mat-card-content>
+              <mat-form-field class="element1">
+                <label for="html">Colonne VarName</label><br>
+                <input matInput id="html"
+                        placeholder="" formControlName="catVarName">
+        
+            </mat-form-field>
+        
+        
+            <mat-form-field class="element1">
+              <label for="catCode">Colonne Code</label><br>
+              <input matInput id="catCode"
+              placeholder="" formControlName="catCode" >
+        
+            </mat-form-field>
+        
+            <mat-form-field class="element1">
+              <label for="catLabel">Colonne Label</label><br>
+              <input matInput id="catLabel"
+              placeholder="" formControlName="catLabel" >
+        
+            </mat-form-field>
+              </mat-card-content>
+              </mat-card>
+          
+        </div>
+        <!--*ngIf="form.valid"-->
+        <div class="container">
+          <label for="txtFileUpload">Select a file for dd:</label>
+          <input 
+          type="file" #csvReader 
+          name="Upload DD" 
+          id="txtFileUpload" 
+          (change)="uploadListener($event)" accept=".xlsx" 
+          /> 
+        </div>
+      </div>
 
-<mat-dialog-content [formGroup]="form">
-
-  <mat-form-field>
-
-      <input matInput
-              placeholder="" formControlName="varName">
-
-  </mat-form-field>
 
 
-  <mat-form-field>
-
-    <input matInput
-    placeholder="" formControlName="description" >
-
-  </mat-form-field>
-
-</mat-dialog-content>
-  </mat-card-content>
-
-  <mat-card-actions class="upload-actions">
-    <div *ngIf="form.valid">
-      <label for="txtFileUpload">Select a file for dd:</label>
-      <input 
-      type="file" #csvReader 
-      name="Upload DD" 
-      id="txtFileUpload" 
-      (change)="uploadListener($event)" accept=".xlsx" 
-      /> 
-    </div>
-  </mat-card-actions>
-</mat-card>
 
 
 <!---

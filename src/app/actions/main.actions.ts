@@ -116,6 +116,18 @@ export const updateddVarDesc = createAction(
   props<{ data:any }>()
 );
 
+export const updateddCatVarName = createAction(
+  '[Data updateddCatVarName] update updateddCatVarName',
+  props<{ data:any }>()
+);
+export const updateddCatCode = createAction(
+  '[Data updateddCatCode] update updateddCatCode',
+  props<{ data:any }>()
+);export const updateddCatLabel = createAction(
+  '[Data updateddCatLabel] update updateddCatLabel',
+  props<{ data:any }>()
+);
+
 
 export const increment = createAction('[Counter Component] Increment');
 export const decrement = createAction('[Counter Component] Decrement');

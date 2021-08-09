@@ -3,7 +3,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { select, Store } from '@ngrx/store';
 import { take, withLatestFrom } from 'rxjs/operators';
-import { selectddVarDesc, selectddVarName, selectFocusVar } from 'src/app/reducers';
+import { selectddCatCode, selectddCatLabel, selectddCatVarName, selectddVarDesc, selectddVarName, selectFocusVar } from 'src/app/reducers';
 import { DataService } from 'src/app/services/data.service';
 
 @Component({
@@ -24,6 +24,7 @@ export class TestddComponent implements OnInit {
   resultsLength2: number;
   variables: any[];
   cat: any[];
+  categories: any[];
 
   constructor(  private store:Store,private dataService:DataService,private changeDetectorRefs: ChangeDetectorRef) { }
 
@@ -67,6 +68,7 @@ if(this.variables){
         return(x)
 
       })
+      console.log(this.variables)
       this.dataSource1.data = this.variables
       this.resultsLength1 = this.variables.length
       
@@ -76,17 +78,25 @@ if(this.variables){
     })
     
     this.dataService.categoriesdd$.pipe(withLatestFrom(
-      this.store.pipe(select(selectddVarName),take(1)),
-      this.store.pipe(select(selectddVarDesc),take(1)))).subscribe((data)=>{
+      this.store.pipe(select(selectddCatVarName),take(1)),
+      this.store.pipe(select(selectddCatCode),take(1)),
+      this.store.pipe(select(selectddCatLabel),take(1)))).subscribe((data)=>{
       console.log(data)
       let name = data[1]
-      let desc = data[2]
+      let code = data[2]
+      let label = data[3]
       console.log(data[0])
+      this.categories = data[0].map((x,i)=>{
+        x.title = data[0][i][name]
+        x.code = data[0][i][code]
+        x.answer_fr = data[0][i][label]
+        return(x)
 
+      })
 
-      this.cat = data[0]
-      this.dataSource2.data = data[0]
-      this.resultsLength2 = data[0].length
+      this.cat = this.categories
+      this.dataSource2.data = this.categories
+      this.resultsLength2 = this.categories.length
       //
       //this.changeDetectorRefs.markForCheck()
 

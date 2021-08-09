@@ -1,7 +1,7 @@
 import { Action, createReducer, on } from '@ngrx/store';
 import { FileState } from '.';
 
-import { addData, clearSVGoff, clearSVGon, decrement, increment, stopInterval, updateCategories, updateCrossVar, updateCrossVar1, updateCrossVar2, updateCrossVarM, updateData, updatedd, updateddVarDesc, updateddVarName, updateFileMeta, updateFileName, updateFileName_dd, updateFileName_map, updateFileSize, updateFocusVar, updateInterval, updateNo_na, updateVarName } from '../actions/main.actions';
+import { updateddCatLabel, updateddCatCode, updateddCatVarName, addData, clearSVGoff, clearSVGon, decrement, increment, stopInterval, updateCategories, updateCrossVar, updateCrossVar1, updateCrossVar2, updateCrossVarM, updateData, updatedd, updateddVarDesc, updateddVarName, updateFileMeta, updateFileName, updateFileName_dd, updateFileName_map, updateFileSize, updateFocusVar, updateInterval, updateNo_na, updateVarName } from '../actions/main.actions';
 
 
 export const mainFeatureKey = 'main';
@@ -47,6 +47,9 @@ export interface MainState {
   datasetState:DatasetState;
   ddVarName:string;
   ddVarDesc:string;
+  ddCatVarName:string;
+  ddCatCode:string;
+  ddCatLabel:string;
 }
 
 
@@ -84,8 +87,11 @@ export const initialState: MainState = {
       texte_fr:""
     }
   },
-  ddVarName:"",
-  ddVarDesc:""
+  ddVarName:"name",
+  ddVarDesc:"label:fr",
+  ddCatVarName:"variable",
+  ddCatCode:"name",
+  ddCatLabel:"label:fr"
 };
 
 
@@ -199,8 +205,23 @@ on(updateddVarDesc, (state, { data }) => {
   console.log("updateCrossVarM")
   console.log(data)
   return { ...state,ddVarDesc:data}
-})
+}),
 
+on(updateddCatVarName, (state, { data }) => {
+  console.log("updateCrossVarM")
+  console.log(data)
+  return { ...state,ddCatVarName:data}
+}),
+on(updateddCatCode, (state, { data }) => {
+  console.log("updateddCatCode")
+  console.log(data)
+  return { ...state,ddCatCode:data}
+}),
+on(updateddCatLabel, (state, { data }) => {
+  console.log("updateddCatLabel")
+  console.log(data)
+  return { ...state,ddCatLabel:data}
+})
 
 
 )

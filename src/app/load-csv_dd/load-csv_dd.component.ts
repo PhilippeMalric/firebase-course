@@ -1,11 +1,12 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { updateddVarDesc, updateddVarName, updateFileName_dd } from '../actions/main.actions';
+import { updateddCatCode, updateddCatLabel, updateddCatVarName, updateddVarDesc, updateddVarName, updateFileName_dd } from '../actions/main.actions';
 import { selectFileName_dd } from '../reducers';
 import { DataService } from '../services/data.service';
 import * as XLSX from "xlsx"
 import { FormBuilder, Validators } from '@angular/forms';
+import { take } from 'rxjs/operators';
 
 
 @Component({
@@ -32,23 +33,50 @@ export class LoadCSV_ddComponent implements OnInit {
     private fb: FormBuilder,
     private dataService:DataService,
     private store:Store) {
+      this.store.pipe(take(1)).subscribe((data:any)=>{
 
+      console.log("in_popup dd",data)
       this.form = this.fb.group({
-        description: ["", Validators.required],
-        varName: ["", Validators.required]
-    });
+        description: [data.main.ddVarName, Validators.required],
+        varName: [data.main.ddVarDesc, Validators.required],
+        catVarName: [data.main.ddCatVarName, Validators.required],
+        catCode: [data.main.ddCatCode, Validators.required],
+        catLabel: [data.main.ddCatLabel, Validators.required]
+      });
 
-    this.form.get("description").valueChanges.subscribe(x => {
-      console.log('description')
-      console.log(x)
-    this.store.dispatch(updateddVarDesc({data:x}))
-   })
+      this.form.get("description").valueChanges.subscribe(x => {
+        console.log('description')
+        console.log(x)
+        this.store.dispatch(updateddVarDesc({data:x}))
+        })
 
-   this.form.get("varName").valueChanges.subscribe(x => {
-    console.log('varName')
-    console.log(x)
-    this.store.dispatch(updateddVarName({data:x}))
- })
+      this.form.get("varName").valueChanges.subscribe(x => {
+        console.log('varName')
+        console.log(x)
+        this.store.dispatch(updateddVarName({data:x}))
+      })
+
+
+      this.form.get("catVarName").valueChanges.subscribe(x => {
+        console.log('catVarName')
+        console.log(x)
+        this.store.dispatch(updateddCatVarName({data:x}))
+      })  
+
+      this.form.get("catCode").valueChanges.subscribe(x => {
+        console.log('ddCatCode')
+        console.log(x)
+        this.store.dispatch(updateddCatCode({data:x}))
+        })
+      
+      this.form.get("catLabel").valueChanges.subscribe(x => {
+        console.log('catLabel')
+        console.log(x)
+        this.store.dispatch(updateddCatLabel({data:x}))
+        })
+
+  })
+ 
 
   }
 
@@ -84,8 +112,8 @@ export class LoadCSV_ddComponent implements OnInit {
           var worksheet_var = workbook.Sheets[first_sheet_name]; 
           let variables = XLSX.utils.sheet_to_json(worksheet_var,{raw:true})
 
-          //console.log("variables");
-          //console.log(variables);
+          console.log("variables");
+          console.log(variables);
           this.dataService.variablesdd$.next(variables)
           var sec_sheet_name = workbook.SheetNames[1];    
           var worksheet_cat = workbook.Sheets[sec_sheet_name];  
