@@ -5,6 +5,8 @@ import { Observable } from 'rxjs';
 import { Graph1Component } from '../chart/graph1/graph1.component';
 import { Graph2Component } from '../chart/graph2/graph2.component';
 import { Graph3Component } from '../chart/graph3/graph3.component';
+import { Graph4Component } from '../chart/graph4/graph4.component';
+import { Graph5Component } from '../chart/graph5/graph5.component';
 import { selectFileName } from '../reducers';
 import { DataService } from '../services/data.service';
 
@@ -65,7 +67,33 @@ click3 = ()=>{
     console.log(`Dialog result: ${result}`);
   });
 }
+
+
+click4 = ()=>{
+  const dialogRef = this.dialog.open(DialogTest,{
+    width: '1500px',
+    data: { component: Graph4Component}});
+      
+  dialogRef.afterClosed().subscribe(result => {
+    //this.dd_present = result
+    console.log(`Dialog result: ${result}`);
+  });
 }
+
+click5 = ()=>{
+  const dialogRef = this.dialog.open(DialogTest,{
+    width: '1500px',
+    data: { component: Graph5Component}});
+      
+  dialogRef.afterClosed().subscribe(result => {
+    //this.dd_present = result
+    console.log(`Dialog result: ${result}`);
+  });
+}
+
+
+}
+
 
 
 
