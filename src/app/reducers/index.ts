@@ -26,6 +26,7 @@ export interface  FileState {
 
 export const selectupdatedd = (state: any) => state.updatedd;
 
+
 export const selectddCatCode = (state: any) => state.main.ddCatCode;
 export const selectddCatLabel = (state: any) => state.main.ddCatLabel;
 export const selectddCatVarName = (state: any) => state.main.ddCatVarName;
@@ -55,8 +56,6 @@ export const selectFileName = createSelector(
 );
 
 
-
-
 export const selectVarNames = createSelector(
   selectFileState,
   (state: FileState) => state.metaInfo.varName
@@ -68,9 +67,6 @@ export const selectForStream = createSelector(
   selectVarNames,
   (interval,varNames) => ({ interval,varNames }),
 )
-
-
-
 
 
 export interface State {

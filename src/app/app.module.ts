@@ -81,6 +81,8 @@ import { DataViewTestComponent, DialogTest } from './data-view-test/data-view-te
 import { Graph1Component } from './chart/graph1/graph1.component';
 import { Graph2Component } from './chart/graph2/graph2.component';
 import { Graph3Component } from './chart/graph3/graph3.component';
+import { Graph4Component } from './chart/graph4/graph4.component';
+import { Graph5Component } from './chart/graph5/graph5.component';
 
 
 @NgModule({
@@ -123,6 +125,8 @@ import { Graph3Component } from './chart/graph3/graph3.component';
     Graph1Component,
     Graph2Component,
     Graph3Component,
+    Graph4Component,
+    Graph5Component,
     DialogTest
   ],
   imports: [

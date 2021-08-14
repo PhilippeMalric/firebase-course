@@ -1,11 +1,11 @@
-import { ChangeDetectorRef } from '@angular/core';
+import { ChangeDetectorRef, HostListener } from '@angular/core';
 import { Component, Input, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 
 import * as d3 from 'd3';
 import { map } from 'd3';
 import { Subscription } from 'rxjs';
-import { selectCategories, selectVarName } from '../reducers';
+import { selectCategories, selectddCatCode, selectddCatLabel, selectddCatVarName, selectVarName } from '../reducers';
 import { MainState } from '../reducers/main.reducer';
 import { DataService } from '../services/data.service';
 import Chart from 'chart.js/auto';
@@ -50,15 +50,18 @@ export class Svg1Component implements OnInit {
   calendar: GoogleChartInterface;
   jsChart: boolean=false;
   reset: boolean;
+  currentIndex: any;
  
 
- 
 
   constructor(
     
     private dataService:DataService,
     private ref:ChangeDetectorRef,
-    private store:Store) { }
+    private store:Store) {
+      this.currentIndex = 0;
+
+     }
 
     
   ngOnInit(): void {
@@ -66,10 +69,10 @@ export class Svg1Component implements OnInit {
     this.ctx = 'myChart'; 
     this.createSvg()
     this.dataService.categories$
-    .subscribe((data:any)=>{
-      console.log("svg")
-      console.log(data)
-      this.createGraph(data)
+    .subscribe((categories:any)=>{
+      console.log("svg : categories")
+      console.log(categories)
+      this.createGraph(categories)
       
       //this.ref.markForCheck()
     })
@@ -90,32 +93,34 @@ export class Svg1Component implements OnInit {
   }
 
 
-
-  createGraph(data: any) {
+  createGraph(categories: any) {
 
     this.reset = false
 
-    if(data.length > 0 ){
+    if(categories.length > 0 ){
       
      
-      let data_count = data.map(x=>x.count)
+      let data_count = categories.map(x=>x.count)
       console.log(data_count)
       let data2 = {
-        labels: data.map(x=>x.categorie),
+        labels: categories.map(x=>x.categorie),
         datasets: [{
           label: "",
           data: data_count,
-          backgroundColor: this.backgroundC.slice(0,data.length),
-          borderColor: this.borderColor.slice(0,data.length),
+          backgroundColor: this.backgroundC.slice(0,categories.length),
+          borderColor: this.borderColor.slice(0,categories.length),
           borderWidth: 1
         }]
       };
+
+console.log("data_count",data_count)
+console.log("data2",data2)
 
       if(this.myChart){
         this.myChart.destroy();
       }
 
-      if(data.length < 20){
+      if(categories.length < 20){
         this.jsChart = true
         setTimeout(() => {
           
@@ -134,14 +139,14 @@ export class Svg1Component implements OnInit {
             })
         }, 100);
         setTimeout(() => {
-          this.createPieChart(data)},200)
+          this.createPieChart(categories)},200)
 
       }
       else{
         console.log("data[1].categorie")
-        console.log(data[1].categorie)
+        console.log(categories[1].categorie)
         this.jsChart = false
-        if(data[1].categorie.split(" ")[0].split("-").length > 2 ){
+        if(categories[1].categorie.split(" ")[0].split("-").length > 2 ){
           this.jsChart = false
           this.store.pipe(select(selectVarName),take(1)).subscribe((varName)=>{
 
@@ -149,7 +154,7 @@ export class Svg1Component implements OnInit {
               this.reset = true
               let years = {}
   
-              this.rows = data.filter((x)=>x.categorie != 'NA' && x.categorie != '').map((x)=>{
+              this.rows = categories.filter((x)=>x.categorie != 'NA' && x.categorie != '').map((x)=>{
               
               let date = x.categorie.split(" ")[0].split("-")
               years[date[0]]=1
@@ -176,13 +181,13 @@ export class Svg1Component implements OnInit {
           
       }else{
         setTimeout(() => {
-          this.createPieChart(data)},100)
+          this.createPieChart(categories)},100)
       }
         
 
       
         
-      this.drawBars(data)
+      this.drawBars(categories)
     }
   }
 }
@@ -256,25 +261,36 @@ export class Svg1Component implements OnInit {
     .attr("fill", "#d04a35");
   }
 
-  createPieChart = (data)=>{
+  createPieChart = (categories)=>{
 
       this.dataService.categoriesdd$.
       pipe(
         withLatestFrom(
-          this.store.pipe(select(selectVarName),take(1))
-          )).subscribe(([dd,varName]) => {
+          this.store.pipe(select(selectVarName),take(1)),
+          this.store.pipe(select(selectddCatCode),take(1)),
+          this.store.pipe(select(selectddCatLabel),take(1)),
+          this.store.pipe(select(selectddCatVarName),take(1)),
+          )).subscribe(([dd,varName,ddCatCode,ddCatLabel,ddCatVarName]) => {
     
-        console.log(dd)
+        //console.log(dd)
+
+
+
         let myCompare = function(dataA,dataB){
     
-          let codeA = dd.filter(data3=>data3.title == varName && data3.answer_fr.slice(0, 120) == dataA[0])
-          let codeB = dd.filter(data3=>data3.title == varName && data3.answer_fr.slice(0, 120) == dataB[0])
+
+
+          let codeA = dd.filter(data3=>data3[ddCatVarName] == varName &&
+             data3[ddCatLabel].slice(0, 120) == dataA[0])
+
+          let codeB = dd.filter(data3=>data3[ddCatVarName] == varName &&
+             data3[ddCatLabel].slice(0, 120) == dataB[0])
     
-          // console.log("codeA")
-          // console.log(codeA)
-          // console.log(dataA[0])
-          // console.log("codeB")
-          // console.log(codeB)
+           console.log("codeA")
+           console.log(codeA)
+           console.log(dataA[0])
+           console.log("codeB")
+           console.log(codeB)
           if(codeA.length == 0 || codeB.length == 0){
             console.log("probleme")
               console.log(dataA[0])
@@ -288,13 +304,13 @@ export class Svg1Component implements OnInit {
             
             return 0
           }
-          return Number(codeA[0].code) - Number(codeB[0].code)
+          return Number(codeA[0][ddCatCode]) - Number(codeB[0][ddCatCode])
     
         }
         this.reset = true
 
 
-        let allNum = data.filter((x)=>x.categorie != 'NA' && 
+        let allNum = categories.filter((x)=>x.categorie != 'NA' && 
               x.categorie != ''&& x.categorie != 'Other').filter((x)=>{
 
           return !isNaN(Number(x.categorie))
@@ -302,15 +318,16 @@ export class Svg1Component implements OnInit {
         }).length != 0 
 
         if(allNum){
-            this.rows = data.filter((x)=>x.categorie != 'NA' && x.categorie != '').map((x)=>{
+            this.rows = categories.filter((x)=>x.categorie != 'NA' && x.categorie != '').map((x)=>{
               return [x.categorie,x.count]
           })
         }else{
-          this.rows = data.filter((x)=>x.categorie != 'NA' && x.categorie != '').map((x)=>{
+          this.rows = categories.filter((x)=>x.categorie != 'NA' && x.categorie != '').map((x)=>{
         
-            if(dd.filter(data3=>data3.title == varName && 
-              data3.answer_fr.slice(0, 120) == x.categorie).length > 0){
-                return [dd.filter(data3=>data3.title == varName && data3.answer_fr.slice(0, 120) == x.categorie)[0].answer_fr,x.count]
+            if(dd.filter(data3=>data3[ddCatVarName] == varName && 
+              data3[ddCatLabel].slice(0, 120) == x.categorie).length > 0){
+                return [dd.filter(data3=>data3[ddCatVarName] == varName &&
+                   data3[ddCatLabel].slice(0, 120) == x.categorie)[0][ddCatLabel],x.count]
             }
             console.log("prob1")
             return["erreur",x.count]
@@ -318,13 +335,15 @@ export class Svg1Component implements OnInit {
       
         }
         
-        if(dd.filter(data=>data.title == varName).length > 0){
+        this.rows = this.convertRows(dd,this.rows,ddCatLabel,ddCatVarName,ddCatCode,varName)
+
+        if(dd.filter(data=>data[ddCatVarName] == varName).length > 0){
           this.rows.sort(myCompare)
         }else{
           this.rows.sort((a,b)=>Number(a[0])-Number(b[0]))
         }
         
-    console.log(this.rows)
+    console.log("rows",this.rows)
       
     
     
@@ -343,6 +362,23 @@ export class Svg1Component implements OnInit {
       });
     }
     
+
+  convertRows(dd,rows,ddCatLabel,ddCatVarName,ddCatCode,varName){
+
+    for(let e of rows){
+      let value = dd.filter(data=>data[ddCatVarName] == varName &&
+        data[ddCatCode] == e[0])
+
+      if(value.length == 1){
+        e[0] = value[0][ddCatLabel]
+      }
+    }
+
+    return rows
+
+  }
+
+
 }
 
 
