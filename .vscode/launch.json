@@ -17,6 +17,21 @@
             "name": "Launch edge against localhost",
             "url": "http://localhost:4200",
             "webRoot": "${workspaceFolder}"
-        }
+        },
+        {
+            "type": "edge",
+            "request": "launch",
+            "version": "canary",
+            "name": "Launch edge ",
+            "url": "http://localhost:4200",
+            "webRoot": "${workspaceFolder}"
+        },
+        {
+            "type": "edge",
+            "request": "launch",
+            "name": "Launch Edge against localhost4200",
+            "url": "http://localhost:4200",
+            "webRoot": "${workspaceFolder}"
+          }
     ]
 }
