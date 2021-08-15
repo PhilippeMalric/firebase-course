@@ -9,17 +9,17 @@
                     Vizualisation
                     </mat-panel-title>
                     <mat-panel-description>
-                    Pie chart
+                    Chart
                     <mat-icon><span class="material-icons-outlined">
                         pie_chart
                         </span></mat-icon>
                     </mat-panel-description>
                 </mat-expansion-panel-header>
 
-
+                <h3>{{desc}}</h3>
                 <google-chart  *ngIf="reset && chart" [data]="calendar"></google-chart>
 
-                
+
             </mat-expansion-panel>
         </mat-accordion>
     </div>
@@ -70,7 +70,7 @@
                     [class.demo-row-is-clicked]="clickedRows.has(row)"
                 *matRowDef="let row; columns: displayedColumns1;"></tr>
             </table>  
-            <mat-paginator #page1  [pageSize]="5"></mat-paginator>
+            <mat-paginator #page1 [pageIndex]="pageIndex1" [pageSize]="5"></mat-paginator>
         
             <h3>Catégories</h3>
             <table style="width:100%;" mat-table [dataSource]="dataSource2" class="mat-elevation-z8">

@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { ChangeDetectorRef, Component, HostListener, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { DataService } from 'src/app/services/data.service';
 
@@ -9,12 +9,24 @@ import { MatPaginator } from '@angular/material/paginator';
 import { selectddCatCode, selectddCatLabel, selectddCatVarName, selectddVarDesc, selectddVarName, selectVarName } from 'src/app/reducers';
 import { updateVarName } from 'src/app/actions/main.actions';
 
+/*
+Graph5 
+
+Permet de selectionner une variable et de montrer des statistiques et des graphique
+
+
+
+*/
+
+
 @Component({
   selector: 'app-graph5',
   templateUrl: './graph5.component.html',
   styleUrls: ['./graph5.component.css']
 })
 export class Graph5Component implements OnInit {
+  @ViewChildren(MatPaginator) paginators: QueryList<MatPaginator>;
+ 
   dataset$: any;
   svg: d3.Selection<SVGGElement, unknown, HTMLElement, any>;
   width = 1000
@@ -31,7 +43,6 @@ export class Graph5Component implements OnInit {
   displayedColumns2 = ["variable","code","texte"];
   chart = true
   reset = false
-  @ViewChildren(MatPaginator) paginators: QueryList<MatPaginator>;
   categories: any[];
   resultsLength2: number;
   clickedRows = new Set<any>();
@@ -43,18 +54,26 @@ export class Graph5Component implements OnInit {
   borderColor: any;
   currentIndex: any;
   varNames: any;
+  varNames2 = [];
+  pageIndex1: number;
+  currentIndexdd: any;
+  desc: string;
 
   @HostListener('document:keypress', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) { 
     if(event.key == "m"){
       this.findNextVar()
     }
+    if(event.key == "n"){
+      this.findPrevVar()
+    }
     console.log("event.key",event.key)
   }
 
   constructor(
     private dataService:DataService,
-    private store:Store
+    private store:Store,
+    private changeDetectorRefs: ChangeDetectorRef
     ) {
 
       this.dataset$ = this.dataService.dataset$
@@ -119,6 +138,7 @@ export class Graph5Component implements OnInit {
       console.log(data)
       this.stat(data[1],data[0])
 
+      
      
     })
 
@@ -135,6 +155,7 @@ export class Graph5Component implements OnInit {
       this.variables = data[0].map((x,i)=>{
         x.texte_fr = data[0][i][desc]
         x.variable = data[0][i][name]
+        this.varNames2[i]= data[0][i][name]
         return(x)
 
       })
@@ -207,39 +228,67 @@ export class Graph5Component implements OnInit {
   }
 
 
+  findPrevVar = ()=>{
 
-
-  findNextVar = ()=>{
-
-    console.log("varNames",this.varNames,this.currentIndex)
+    console.log("varNames",this.varNames2,this.currentIndex)
     
-        if(this.currentIndex < this.varNames.length){
-          this.currentIndex = this.currentIndex +1
+        if(this.currentIndexdd != 0){
+          this.currentIndexdd = this.currentIndexdd -1
 
           let row = this.variables.filter((data:any)=>{
 
-            return data.variable == this.varNames[this.currentIndex]
+            return data.variable == this.varNames2[this.currentIndexdd]
 
           })[0]
 
-          console.log(row,this.variables,this.varNames[this.currentIndex])
+          console.log(row,this.variables,this.varNames2[this.currentIndexdd])
 
           this.clickRows(row)
     
           //return this.options2[this.currentIndex++]
     
         }else{
-          this.currentIndex = 0
+          this.currentIndexdd = this.varNames2.length
           let row = this.variables.filter((data:any)=>{
 
-            data.variable == this.varNames[this.currentIndex]
+            data.variable == this.varNames2[this.currentIndexdd]
 
           })[0]
           this.clickRows(row)
-    
-        
+          
         }
     
+      }
+
+  findNextVar = ()=>{
+
+    console.log("varNames",this.varNames,this.currentIndex)
+    
+        if(this.currentIndexdd < this.varNames2.length){
+          this.currentIndexdd = this.currentIndexdd +1
+
+          let row = this.variables.filter((data:any)=>{
+
+            return data.variable == this.varNames2[this.currentIndexdd]
+
+          })[0]
+
+          console.log(row,this.variables,this.varNames2[this.currentIndexdd])
+
+          this.clickRows(row)
+    
+          //return this.options2[this.currentIndex++]
+    
+        }else{
+          this.currentIndexdd = 0
+          let row = this.variables.filter((data:any)=>{
+
+            data.variable == this.varNames2[this.currentIndexdd]
+
+          })[0]
+          this.clickRows(row)
+          
+        }
     
       }
 
@@ -251,8 +300,15 @@ export class Graph5Component implements OnInit {
     console.log("row",row)
     this.store.dispatch(updateVarName({data:row.variable}))
 
-    this.currentIndex = this.varNames.indexOf(row.variable)
-    console.log("currentIndex",this.currentIndex)
+    this.currentIndexdd = this.varNames2.indexOf(row.variable)
+    this.currentIndex = this.varNames2.indexOf(row.variable)
+    console.log("currentIndex",this.currentIndexdd)
+    let page = Math.floor( (this.currentIndexdd) / 5 )
+    console.log("page",page)
+    let pag1 = this.paginators.get(0);
+    pag1.pageIndex = page
+    this.dataSource1.paginator = pag1
+    this.changeDetectorRefs.markForCheck()
   }
 
 
@@ -301,12 +357,26 @@ export class Graph5Component implements OnInit {
         
         if(categories[1].categorie.split(" ")[0].split("-").length > 2 ){
           
-          this.store.pipe(select(selectVarName),take(1)).subscribe((varName)=>{
+          this.store.pipe(select(selectVarName),take(1),
+          withLatestFrom(
+            this.store.pipe(select(selectddVarName),take(1)),
+            this.store.pipe(select(selectddVarDesc),take(1)),
+            this.dataService.variablesdd$
+          )).subscribe(([
+            varName, 
+            ddVarName,
+            ddVarDesc,
+            ddVar
+          ])=>{
 
             setTimeout(() => {
               this.reset = true
               let years = {}
   
+              this.desc = ""
+              this.desc = ddVar.filter(data=>data[ddVarName] == varName)[0][ddVarDesc]
+        
+
               this.rows = categories.filter((x)=>x.categorie != 'NA' && x.categorie != '').map((x)=>{
               
               let date = x.categorie.split(" ")[0].split("-")
@@ -345,14 +415,24 @@ export class Graph5Component implements OnInit {
   createPieChart = (categories)=>{
 
     this.dataService.categoriesdd$.
-    pipe(
+    pipe(take(1),
       withLatestFrom(
         this.store.pipe(select(selectVarName),take(1)),
         this.store.pipe(select(selectddCatCode),take(1)),
         this.store.pipe(select(selectddCatLabel),take(1)),
         this.store.pipe(select(selectddCatVarName),take(1)),
+        this.store.pipe(select(selectddVarName),take(1)),
+        this.store.pipe(select(selectddVarDesc),take(1)),
         this.dataService.variablesdd$
-        )).subscribe(([dd,varName,ddCatCode,ddCatLabel,ddCatVarName,ddVar]) => {
+        )).subscribe(([
+          dd,
+          varName,
+          ddCatCode,
+          ddCatLabel,
+          ddCatVarName,
+          ddVarName,
+          ddVarDesc,
+          ddVar]) => {
   
       //console.log(dd)
 
@@ -362,11 +442,20 @@ export class Graph5Component implements OnInit {
   
 
 
-        let codeA = dd.filter(data3=>data3[ddCatVarName] == varName &&
-           data3[ddCatLabel].slice(0, 120) == dataA[0])
+        let codeA = dd.filter(data3=>{
+          //console.log(data3)
+          let ddCatstring = data3[ddCatLabel] + ""
+          return data3[ddCatVarName] == varName &&
+          ddCatstring.slice(0, 120) == dataA[0]
+          
+          })
 
-        let codeB = dd.filter(data3=>data3[ddCatVarName] == varName &&
-           data3[ddCatLabel].slice(0, 120) == dataB[0])
+        let codeB = dd.filter(data3=>{
+          let ddCatstring = data3[ddCatLabel] + ""
+          return data3[ddCatVarName] == varName &&
+          ddCatstring.slice(0, 120) == dataB[0]
+          
+          })
   
          console.log("codeA")
          console.log(codeA)
@@ -418,11 +507,12 @@ export class Graph5Component implements OnInit {
       }
       
       this.rows = this.convertRows(dd,this.rows,ddCatLabel,ddCatVarName,ddCatCode,varName)
+      this.desc = ""
       let desc = ""
+      desc = ddVar.filter(data=>data[ddVarName] == varName)[0][ddVarDesc]
 
       if(dd.filter(data=>data[ddCatVarName] == varName).length > 0){
         this.rows.sort(myCompare)
-        desc = ddVar.filter(data=>data[ddCatVarName] == varName)[0][ddCatLabel]
       }else{
         this.rows.sort((a,b)=>Number(a[0])-Number(b[0]))
       }
@@ -454,7 +544,7 @@ export class Graph5Component implements OnInit {
         data[ddCatCode] == e[0])
 
       if(value.length == 1){
-        e[0] = value[0][ddCatLabel]
+        e[0] = value[0][ddCatLabel] + ""
       }
     }
 
