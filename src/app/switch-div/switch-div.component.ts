@@ -3,7 +3,7 @@ import { Store } from '@ngrx/store';
 import { updateNo_na } from '../actions/main.actions';
 
 @Component({
-  selector: 'app-switch-div',
+  selector: 'switchs-div',
   templateUrl: './switch-div.component.html',
   styleUrls: ['./switch-div.component.css']
 })

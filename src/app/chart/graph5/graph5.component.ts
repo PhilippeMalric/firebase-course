@@ -6,7 +6,7 @@ import * as d3 from 'd3';
 import { take, withLatestFrom } from 'rxjs/operators';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
-import { selectddCatCode, selectddCatLabel, selectddCatVarName, selectddVarDesc, selectddVarName, selectVarName } from 'src/app/reducers';
+import { selectddCatCode, selectddCatLabel, selectddCatVarName, selectddVarDesc, selectddVarName, selectno_na, selectVarName } from 'src/app/reducers';
 import { updateVarName } from 'src/app/actions/main.actions';
 
 /*
@@ -58,6 +58,7 @@ export class Graph5Component implements OnInit {
   pageIndex1: number;
   currentIndexdd: any;
   desc: string;
+  row: any;
 
   @HostListener('document:keypress', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) { 
@@ -81,6 +82,28 @@ export class Graph5Component implements OnInit {
      }
 
   ngOnInit(): void {
+
+
+
+    this.store.pipe(select(selectno_na)).pipe(withLatestFrom(this.dataService.variablesdd$)).subscribe((data)=>{
+      console.log(data)
+      if(data && data[1] && data[1][0]){
+        if(!this.row ){
+          this.row = data[1][0]
+        }
+        this.store.pipe(select(selectVarName))
+        .pipe(take(1),withLatestFrom(
+          this.dataService.dataset$,
+            this.store.pipe(select(selectno_na),take(1))))
+        .subscribe((data:any)=>{
+          console.log("graph5 : no_NA")
+          console.log(data)
+          this.stat(data[1],data[0],data[2])
+        })
+      }
+    })
+
+
     this.currentIndex = 1;
 
 
@@ -132,14 +155,12 @@ export class Graph5Component implements OnInit {
 
     this.store.pipe(select(selectVarName))
     .pipe(withLatestFrom(
-      this.dataService.dataset$))
+      this.dataService.dataset$,
+        this.store.pipe(select(selectno_na),take(1))))
     .subscribe((data:any)=>{
       console.log("graph5 : categories")
       console.log(data)
-      this.stat(data[1],data[0])
-
-      
-     
+      this.stat(data[1],data[0],data[2])
     })
 
     this.dataSource2.data = this.categories
@@ -295,6 +316,7 @@ export class Graph5Component implements OnInit {
       
 
   clickRows(row){
+    this.row = row
     this.clickedRows.clear()
     this.clickedRows.add(row)
     console.log("row",row)
@@ -305,9 +327,12 @@ export class Graph5Component implements OnInit {
     console.log("currentIndex",this.currentIndexdd)
     let page = Math.floor( (this.currentIndexdd) / 5 )
     console.log("page",page)
-    let pag1 = this.paginators.get(0);
-    pag1.pageIndex = page
-    this.dataSource1.paginator = pag1
+    if(this.paginators){
+      let pag1 = this.paginators.get(0);
+      pag1.pageIndex = page
+      this.dataSource1.paginator = pag1
+    }
+   
     this.changeDetectorRefs.markForCheck()
   }
 
@@ -432,7 +457,8 @@ export class Graph5Component implements OnInit {
           ddCatVarName,
           ddVarName,
           ddVarDesc,
-          ddVar]) => {
+          ddVar
+          ]) => {
   
       //console.log(dd)
 
@@ -489,11 +515,13 @@ export class Graph5Component implements OnInit {
       }).length != 0 
 
       if(allNum){
-          this.rows = categories.filter((x)=>x.categorie != 'NA' && x.categorie != '').map((x)=>{
+          this.rows = categories
+          //.filter((x)=>x.categorie != 'NA' && x.categorie != '')
+          .map((x)=>{
             return [x.categorie,x.count]
         })
       }else{
-        this.rows = categories.filter((x)=>x.categorie != 'NA' && x.categorie != '').map((x)=>{
+        this.rows = categories.map((x)=>{
       
           if(dd.filter(data3=>data3[ddCatVarName] == varName && 
             data3[ddCatLabel].slice(0, 120) == x.categorie).length > 0){
@@ -503,6 +531,16 @@ export class Graph5Component implements OnInit {
           console.log("prob1")
           return["erreur",x.count]
         })
+        /*categories.filter((x)=>x.categorie != 'NA' && x.categorie != '').map((x)=>{
+      
+          if(dd.filter(data3=>data3[ddCatVarName] == varName && 
+            data3[ddCatLabel].slice(0, 120) == x.categorie).length > 0){
+              return [dd.filter(data3=>data3[ddCatVarName] == varName &&
+                 data3[ddCatLabel].slice(0, 120) == x.categorie)[0][ddCatLabel],x.count]
+          }
+          console.log("prob1")
+          return["erreur",x.count]
+        })*/
     
       }
       
@@ -519,8 +557,6 @@ export class Graph5Component implements OnInit {
       
   console.log("rows",this.rows)
     
-  
-  
       this.calendar = {
         chartType: 'PieChart',
         dataTable: this.rows,
@@ -552,7 +588,7 @@ export class Graph5Component implements OnInit {
 
   }
 
-  stat = (dataset,varname)=>{
+  stat = (dataset,varname,no_NA)=>{
     console.log("stat2")
     //console.log(varNames.includes(this.myControl.value))
     if(dataset[0].includes(varname)){
@@ -562,22 +598,39 @@ export class Graph5Component implements OnInit {
       console.log( n )
       let col = dataset.map(x=>x[n])
       console.log("col", col )
-      this.createStatDesc(col)
+      this.createStatDesc(col,no_NA)
     }
        
       
   }
-  createStatDesc = (col)=>{
+
+  createStatDesc = (col,no_NA)=>{
+    if(!no_NA){
+      col = col.map((data)=>{
+
+        return (data=="")?"NA":data
+
+      })
+    }
+    else{
+      col = col.filter((data)=>{
+
+        return data != ""
+
+      })
+    }
     console.log("length")
     console.log(col.length)
     let stat_desc = this.createCount(col)
     console.log("stat_desc ------------------------------------")
     console.log(stat_desc)
     this.createGraph(stat_desc)
-    
-
-
   }
+
+
+
+
+
   createCount(arr){
     if(arr[1].split(" ")[0].split("-").length > 2 ){
       arr = arr.map(x=>x.split(" ")[0])

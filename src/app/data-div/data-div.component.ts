@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { select, Store } from '@ngrx/store';
-import { updateNo_na } from '../actions/main.actions';
 import { selectData, selectFileName } from '../reducers';
 
 @Component({
