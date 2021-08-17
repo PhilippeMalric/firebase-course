@@ -357,7 +357,6 @@ export class Graph5Component implements OnInit {
 
     console.log(this.svg)
 
-    
     //console.log("svg" )
     //console.log(this.svg )
   }
@@ -368,8 +367,6 @@ export class Graph5Component implements OnInit {
     this.reset = false
 
     if(categories.length > 0 ){
-      
-
       if(categories.length < 20){
         
         setTimeout(() => {
