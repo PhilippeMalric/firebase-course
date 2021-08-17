@@ -426,7 +426,6 @@ export class Graph5Component implements OnInit {
 
           })
           
-          
       }else{
         setTimeout(() => {
           this.createPieChart(categories)},100)
