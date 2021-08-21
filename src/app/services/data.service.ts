@@ -40,35 +40,7 @@ nAtable$: BehaviorSubject<any[]>;
 
     this.dataset$.subscribe((data)=>{
 
-      console.log("createMetaData")
-
-
-      let dataset = {
-
-        description: "",
-        url:"",
-        longDescription: "",
-        iconUrl: "",
-        seqNo:0,
-        categories: [],
-        variablesCount: 0,
-        rowsCount:0,
-        variable: []
-
-
-      }
-
-
-
-
-    if(data.length > 0){
-      this.datasetsService.createDataset(dataset).subscribe()
-
-    }
- 
-
-
-
+      
 
 
     })

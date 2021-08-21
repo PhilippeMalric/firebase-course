@@ -3,7 +3,7 @@ import { MatDialog, MatDialogConfig } from "@angular/material/dialog";
 import {catchError, tap} from 'rxjs/operators';
 import {throwError} from 'rxjs';
 import {Router} from '@angular/router';
-import { Dataset } from 'src/app/model/dataset';
+import { Dataset_Stats } from 'src/app/model/dataset';
 import { DatasetsService } from 'src/app/services/dataset.service';
 import { EditDsDialogComponent } from '../edit-ds-dialog/edit-ds-dialog.component';
 
@@ -15,13 +15,13 @@ import { EditDsDialogComponent } from '../edit-ds-dialog/edit-ds-dialog.componen
 export class DataSetCardListComponent implements OnInit {
 
     @Input()
-    datasets: Dataset[];
+    datasets: Dataset_Stats[];
 
     @Output()
     datasetEdited = new EventEmitter();
 
     @Output()
-    datasetDeleted = new EventEmitter<Dataset>();
+    datasetDeleted = new EventEmitter<Dataset_Stats>();
 
     constructor(
       private dialog: MatDialog,
@@ -33,7 +33,7 @@ export class DataSetCardListComponent implements OnInit {
         console.log("datasets",this.datasets)
     }
 
-    editDataSet(dataset:Dataset) {
+    editDataSet(dataset:Dataset_Stats) {
 
         const dialogConfig = new MatDialogConfig();
 
@@ -53,7 +53,7 @@ export class DataSetCardListComponent implements OnInit {
 
     }
 
-    onDeleteDataSet(dataset:Dataset) {
+    onDeleteDataSet(dataset:Dataset_Stats) {
 
         this.datasetsService.deleteDataset(dataset.id)
             .pipe(

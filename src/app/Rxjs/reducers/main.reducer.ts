@@ -27,7 +27,8 @@ import { updateddCatLabel,
   updateFocusVar, 
   updateInterval, 
   updateNo_na, 
-  updateVarName } from '../actions/main.actions';
+  updateVarName,
+  createDs } from '../actions/main.actions';
 
 
 export const mainFeatureKey = 'main';
@@ -247,6 +248,11 @@ on(updateddCatLabel, (state, { data }) => {
   console.log("updateddCatLabel")
   console.log(data)
   return { ...state,ddCatLabel:data}
+}),
+on(createDs, (state, { data }) => {
+  console.log("createDs")
+  console.log(data)
+  return { ...state}
 })
 
 

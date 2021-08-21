@@ -1,6 +1,6 @@
 import { Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
-import { Dataset } from 'src/app/model/dataset';
+import { Dataset_Stats } from 'src/app/model/dataset';
 
 
 
@@ -11,7 +11,7 @@ import { Dataset } from 'src/app/model/dataset';
 })
 export class DatasetComponent implements OnInit {
 
-  dataset:Dataset;
+  dataset:Dataset_Stats;
 
   loading = false;
 
@@ -24,7 +24,7 @@ export class DatasetComponent implements OnInit {
   ngOnInit() {
 
       this.dataset = this.route.snapshot.data["dataset"];
-
+    console.log("Dataset : ",this.dataset)
   }
 
 }

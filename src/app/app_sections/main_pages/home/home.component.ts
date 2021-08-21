@@ -3,7 +3,7 @@ import {Observable, of} from 'rxjs';
 import {catchError, map, tap} from 'rxjs/operators';
 import {Router} from '@angular/router';
 import { Course } from 'src/app/model/course';
-import { Dataset } from 'src/app/model/dataset';
+import { Dataset_Stats } from 'src/app/model/dataset';
 import { CoursesService } from 'src/app/services/courses.service';
 import { DatasetsService } from 'src/app/services/dataset.service';
 
@@ -19,7 +19,7 @@ export class HomeComponent implements OnInit {
 
     advancedCourses$: Observable<Course[]>;
 
-    datasets$: Observable<Dataset[]>;
+    datasets$: Observable<Dataset_Stats[]>;
 
 
     constructor(

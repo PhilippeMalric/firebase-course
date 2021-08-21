@@ -3,7 +3,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import {FormBuilder, Validators, FormGroup} from "@angular/forms";
 import {AngularFireStorage} from '@angular/fire/storage';
 import {Observable} from 'rxjs';
-import { Dataset } from 'src/app/model/dataset';
+import { Dataset_Stats } from 'src/app/model/dataset';
 import { DatasetsService } from 'src/app/services/dataset.service';
 
 
@@ -16,12 +16,12 @@ export class EditDsDialogComponent {
 
     form:FormGroup;
 
-    dataset: Dataset;
+    dataset: Dataset_Stats;
 
     constructor(
         private dialogRef: MatDialogRef<EditDsDialogComponent>,
         private fb: FormBuilder,
-        @Inject(MAT_DIALOG_DATA) dataset: Dataset,
+        @Inject(MAT_DIALOG_DATA) dataset: Dataset_Stats,
         private datasetsService: DatasetsService
     ) {
 

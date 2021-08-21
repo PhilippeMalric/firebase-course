@@ -123,10 +123,18 @@ export const updateddCatVarName = createAction(
 export const updateddCatCode = createAction(
   '[Data updateddCatCode] update updateddCatCode',
   props<{ data:any }>()
-);export const updateddCatLabel = createAction(
+);
+export const updateddCatLabel = createAction(
   '[Data updateddCatLabel] update updateddCatLabel',
   props<{ data:any }>()
 );
+export const createDs = createAction(
+  '[Data createDs] update createDs',
+  props<{ data:any }>()
+);
+
+
+
 
 
 export const increment = createAction('[Counter Component] Increment');

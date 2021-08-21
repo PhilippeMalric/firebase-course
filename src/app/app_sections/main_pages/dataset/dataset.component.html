@@ -1,16 +1,22 @@
 <div class="dataset">
 
-    <h2>{{dataset?.description}}</h2>
+<mat-card style="width: fit-content;">
+    <mat-card-header>
 
-    <img [src]="dataset?.iconUrl" class="dataset-thumbnail mat-elevation-z8">
+        <mat-card-title>{{dataset?.description}}</mat-card-title>
+    
+      </mat-card-header>
+    
+      <mat-card-content>
+        <h3>
+           Nombre de rangées : {{dataset?.rowsCount}}
+        </h3>
+        <h3>
+            Nombre de colonnes : {{dataset?.variablesCount}}
+        </h3>
+      </mat-card-content>
+</mat-card>
 
-    <div class="spinner-container" *ngIf="loading">
-
-        <mat-spinner></mat-spinner>
-
-    </div>
-
-</div>
 
 
 

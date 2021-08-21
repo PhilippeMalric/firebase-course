@@ -4,7 +4,7 @@ import {from, Observable, of, pipe} from "rxjs";
 import {Course} from "../model/course";
 import {concatMap, map, tap} from "rxjs/operators";
 import {convertSnaps} from "./db-utils";
-import { Dataset } from "../model/dataset";
+import { Dataset_Stats } from "../model/dataset";
 
 
 @Injectable({
@@ -16,14 +16,14 @@ export class DatasetsService {
 
     }
 
-    findDatasetByUrl(datasetUrl: string): Observable<Dataset | null> {
-        return this.db.collection("ds",
+    findDatasetByUrl(datasetUrl: string): Observable<Dataset_Stats | null> {
+        return this.db.collection("datasetStats",
             ref => ref.where("url", "==", datasetUrl))
             .get()
             .pipe(
               map(results => {
 
-                  const datasets = convertSnaps<Dataset>(results);
+                  const datasets = convertSnaps<Dataset_Stats>(results);
 
                   return datasets.length == 1 ? datasets[0] : null;
 
@@ -34,22 +34,22 @@ export class DatasetsService {
     
 
     deleteDataset(datasetId:string) {
-        return from(this.db.doc(`ds/${datasetId}`).delete());
+        return from(this.db.doc(`datasetStats/${datasetId}`).delete());
     }
 
-    updateDataset(datasetId:string, changes: Partial<Dataset>):Observable<any> {
-        return from(this.db.doc(`ds/${datasetId}`).update(changes));
+    updateDataset(datasetId:string, changes: Partial<Dataset_Stats>):Observable<any> {
+        return from(this.db.doc(`datasetStats/${datasetId}`).update(changes));
     }
 
-    createDataset(newDataset: Partial<Dataset>, datasetId?:string) {
+    createDataset(newDataset: Partial<Dataset_Stats>, datasetId?:string) {
         console.log("createDataset")
-        return this.db.collection("ds",
+        return this.db.collection("datasetStats",
                 ref => ref.orderBy("seqNo", "desc").limit(1))
             .get()
             .pipe(
                 concatMap(result => {
                     
-                    const datasets = convertSnaps<Dataset>(result);
+                    const datasets = convertSnaps<Dataset_Stats>(result);
                     console.log("dataset",datasets)
                     const lastDatasetSeqNo = datasets[0]?.seqNo ?? 0;
 
@@ -66,10 +66,10 @@ console.log("datasetId",datasetId)
 //this.db.doc(`dataset/${datasetId}`).set(dataset)
 //this.db.collection("ds").add({test:0})
                     if (datasetId) {
-                        save$ = from(this.db.doc(`ds/${datasetId}`).set(dataset));
+                        save$ = from(this.db.doc(`datasetStats/${datasetId}`).set(dataset));
                     }
                     else {
-                        save$ = from(this.db.collection("ds").add(dataset));
+                        save$ = from(this.db.collection("datasetStats").add(dataset));
                     }
 
                     return save$
@@ -88,13 +88,13 @@ console.log("datasetId",datasetId)
             )
     }
 
-    loadDataSets(): Observable<Dataset[]> {
+    loadDataSets(): Observable<Dataset_Stats[]> {
          return this.db.collection(
-            "ds")
+            "datasetStats")
             .get()
              .pipe(
-                 tap((data)=>console.log("loadds",data)),
-                 map(result => convertSnaps<Dataset>(result))
+                 tap((data)=>console.log("load datasetStats",data)),
+                 map(result => convertSnaps<Dataset_Stats>(result))
              );
 
     }

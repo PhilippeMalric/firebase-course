@@ -25,6 +25,7 @@ export interface  FileState {
 }
 
 export const selectupdatedd = (state: any) => state.updatedd;
+export const selectall = (state: any) => state.main;
 
 
 export const selectddCatCode = (state: any) => state.main.ddCatCode;

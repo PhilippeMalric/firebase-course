@@ -9,7 +9,8 @@ import Timestamp = firebase.firestore.Timestamp;
 import { select, Store } from '@ngrx/store';
 import { DatasetsService } from 'src/app/services/dataset.service';
 import { selectFileState } from 'src/app/Rxjs/reducers';
-import { Dataset } from 'src/app/model/dataset';
+import { Dataset_Stats } from 'src/app/model/dataset';
+import { createDs } from 'src/app/Rxjs/actions/main.actions';
 
 @Component({
   selector: 'create-dataset',
@@ -52,12 +53,10 @@ export class CreateDatasetComponent implements OnInit {
 
         const val = this.form.value;
 
-        const newDataset: Partial<Dataset> = {
+        const newDataset: Partial<Dataset_Stats> = {
             description:  val.description,
             url: val.url,
-            longDescription: val.longDescription,
-            rowsCount: val.rowsCount,
-            categories: [val.category]
+            id:this.datasetId
         };
 
         let today = new Date();
@@ -77,21 +76,7 @@ export class CreateDatasetComponent implements OnInit {
 
       console.log(yyyy+"-"+mm+"-"+dd)
       newDataset.startAt = Timestamp.fromDate(new Date());
-
-      this.datasetsService.createDataset(newDataset, this.datasetId)
-          .pipe(
-              tap(dataset => {
-                  console.log("Created new dataset: ", dataset);
-                  this.router.navigateByUrl("/datasets/"+newDataset.url);
-              }),
-              catchError(err => {
-                  console.log(err);
-                  alert("Could not create the dataset.");
-                  return throwError(err);
-              })
-          )
-          .subscribe();
-
+        this.store.dispatch(createDs({data:newDataset}))
 
 
 

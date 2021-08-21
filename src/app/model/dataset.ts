@@ -2,7 +2,7 @@ import firebase from 'firebase/app';
 import { Variable } from './variable';
 import Timestamp = firebase.firestore.Timestamp;
 
-export interface Dataset {
+export interface Dataset_Stats {
   id: string;
   description: string;
   url:string;
