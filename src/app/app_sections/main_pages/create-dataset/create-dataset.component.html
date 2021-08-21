@@ -1,0 +1,52 @@
+<div class="create-dataset">
+
+  <h3>Create New Dataset</h3>
+
+  <form [formGroup]="form">
+
+
+    <load-csv></load-csv>
+    
+
+    <mat-form-field appearance="outline">
+
+      <input placeholder="DataSet title" matInput formControlName="description">
+
+    </mat-form-field>
+
+ 
+    <mat-form-field appearance="outline">
+
+      <input placeholder="Dataset url" matInput formControlName="url">
+
+    </mat-form-field>
+
+    <!--
+    <mat-form-field appearance="outline">
+
+      <textarea matInput placeholder="Course description"
+                formControlName="longDescription"></textarea>
+
+    </mat-form-field>
+
+    <mat-slide-toggle class="promo" color="primary" formControlName="promo">
+      Course in promotion?
+    </mat-slide-toggle>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Promotion start date</mat-label>
+      <input matInput [matDatepicker]="promoStartPicker" formControlName="promoStartAt">
+      <mat-datepicker-toggle matSuffix [for]="promoStartPicker"></mat-datepicker-toggle>
+      <mat-datepicker #promoStartPicker></mat-datepicker>
+    </mat-form-field>
+-->
+    <button mat-raised-button color="warn" [disabled]="!form.valid"
+        (click)="onCreateDataset()">
+      Create DataSet
+    </button>
+
+  </form>
+
+</div>
+
+

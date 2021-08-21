@@ -1,5 +1,6 @@
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
+
 # compiled output
 /dist
 /tmp
@@ -10,6 +11,7 @@
 
 # IDEs and editors
 /.idea
+/.firebase
 .project
 .classpath
 .c9/
@@ -40,3 +42,13 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
+firebase-debug.log
+firestore-debug.log
+ui-debug.log
+/try-emulator/node_modules
+/functions/service-accounts/*.json
+
+
+
+/src/environments/environment.prod.ts
+/src/environments/environment.ts

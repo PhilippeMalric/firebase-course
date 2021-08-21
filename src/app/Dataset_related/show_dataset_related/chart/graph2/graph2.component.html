@@ -1,0 +1,23 @@
+<div *ngIf="(dataset$|async)?.length > 0" style="width: fit-content;margin: auto;">
+    <mat-card  class="mat-elevation-z10 m-3">
+
+        <mat-card-header>
+      
+          <mat-card-title>Graph2</mat-card-title>
+      
+        </mat-card-header>
+      
+        <mat-card-content style="height: 320px;">
+          
+            <figure id="bar"></figure>
+
+
+        </mat-card-content>
+    </mat-card>
+
+
+</div>
+<div style="width: fit-content;margin: auto;">
+    <button mat-button (click)="myclick()">Calcul</button>
+
+</div>

@@ -1,0 +1,52 @@
+
+<mat-card *ngIf="(fileName$|async) != ''">
+    <mat-card-header>
+      <mat-card-title>
+        Sélection de la variable
+      </mat-card-title>
+      <mat-card-subtitle>
+          {{fileName$|async}}
+      </mat-card-subtitle>
+    </mat-card-header>
+  
+  
+    <mat-card-content>
+      <div class="row">
+        
+        <div class="col-sm-3">
+          <form class="form">
+            <mat-form-field class="example-full-width">
+              <mat-label>Var Name</mat-label>
+              <input type="text"
+                    placeholder="Pick one"
+                    aria-label="Number"
+                    matInput
+                    [formControl]="myControl"
+                    [matAutocomplete]="auto">
+              <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+                <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+                  {{option}}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+          </form>
+        </div>
+        <div class="col-sm-9">
+          <mat-expansion-panel hideToggle>
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                  Quick view
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+            <svg2></svg2>
+          </mat-expansion-panel>
+        </div>
+
+      </div>
+    </mat-card-content>
+  
+    <mat-card-actions>
+      <button class="ml-2 mr-2" mat-raised-button (click)='createStat()'>Stat</button>
+    </mat-card-actions>
+  </mat-card>
+
