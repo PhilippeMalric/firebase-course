@@ -1,5 +1,5 @@
 {
-  "name": "angularfire-course",
+  "name": "angularDataScience-app",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
@@ -31,6 +31,7 @@
     "@ngrx/entity": "^12.0.0",
     "@ngrx/store": "^12.0.0",
     "@ngrx/store-devtools": "^12.0.0",
+    "angular-cli-ghpages": "^1.0.0-rc.2",
     "angular-google-charts": "^2.2.1",
     "angular-plotly.js": "^4.0.0",
     "bootstrap": "^5.0.1",
